@@ -542,6 +542,9 @@
   const useWebhookHubspot = false;
   const customAttributes = [];
 
+  // ── Instancia SDK ────────────────────────────────────────────
+  var nodriza = new Nodriza({ hostname: domain });
+
   // ── Estado interno ───────────────────────────────────────────
   var productsList = [];
   var agentsList = [];
@@ -621,7 +624,6 @@
       return;
     }
     setLoading(true);
-    nodriza.config({ domain: domain });
     nodriza.api.confirmationCode.confirm({ code: $('#confirmationCode').val() }, function (err, res) {
       if (err || !res || !res.hash) {
         alert('Código de verificación incorrecto. Intenta de nuevo.');
@@ -654,7 +656,6 @@
       emailClient: true, emailAgent: true, assignedAgentEmail: agentEmail
     };
 
-    nodriza.config({ domain: domain });
     nodriza.api.proposalbot.generate(payload, function (err, res) {
       if (err) {
         console.error('Error createProposal:', err);
