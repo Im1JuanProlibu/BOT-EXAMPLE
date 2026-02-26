@@ -503,6 +503,7 @@
   // ── Config ───────────────────────────────────────────────────
   var domain      = 'customer-design.prolibu.com';
   var rolesString = 'agent';
+  var apiKey      = '9fa81136-34db-495e-81e5-ef1c77bcb4d4'; // access token requerido por el endpoint de login
 
   // ── Estado de sesión ─────────────────────────────────────────
   var flToken       = '';
@@ -543,21 +544,28 @@
     $('#sp-login').show();
     $('#login-err').hide();
 
+    var loginBody = { email: email, password: password };
+    console.log('[LOGIN] POST /v1/user/login — body:', loginBody);
+
     $.ajax({
       url: 'https://' + domain + '/v1/user/login',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({ email: email, password: password }),
+      headers: { Authorization: 'Bearer ' + apiKey },
+      data: JSON.stringify(loginBody),
       success: function (res) {
-        console.log('Login response:', res);
+        console.log('[LOGIN] ✅ Response completo:', JSON.stringify(res, null, 2));
 
         // Extraer token — manejar distintos formatos de respuesta
         var data = res.data || res;
         flToken = data.token || data.accessToken || data.access_token || data.jwt || '';
         flCurrentUser = data.user || data.userData || data.profile || { email: email, firstName: email.split('@')[0] };
 
+        console.log('[LOGIN] token extraído:', flToken);
+        console.log('[LOGIN] usuario:', flCurrentUser);
+
         if (!flToken) {
-          flShowLoginErr('No se recibió token. Revisa la consola.');
+          flShowLoginErr('No se recibió token. Revisa la consola (F12).');
           flResetLoginBtn();
           return;
         }
@@ -575,9 +583,10 @@
         flInitApp();
       },
       error: function (e) {
-        console.error('Login error:', e);
-        var msg = 'Credenciales incorrectas';
-        try { var b = JSON.parse(e.responseText); msg = b.message || b.error || msg; } catch (_) {}
+        console.error('[LOGIN] ❌ Status:', e.status, e.statusText);
+        console.error('[LOGIN] Response:', e.responseText);
+        var msg = 'Error ' + e.status;
+        try { var b = JSON.parse(e.responseText); msg = b.message || b.error || b.msg || msg; } catch (_) {}
         flShowLoginErr(msg);
         flResetLoginBtn();
       }
