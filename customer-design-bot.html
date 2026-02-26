@@ -1,0 +1,410 @@
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  CSS                                                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="https://s3.amazonaws.com/cdn.nodriza.io/assets/css/chatbot.automotriz.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  #bot-customer-design {
+    --color-acento: #1e1e2e;
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+  }
+
+  #bot-customer-design *,
+  #bot-customer-design *::before,
+  #bot-customer-design *::after {
+    box-sizing: inherit;
+  }
+
+  #bot-customer-design .bot-wrapper {
+    min-height: 100vh;
+    background-color: #111;
+    background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  #bot-customer-design .bot-card {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 14px;
+    padding: 36px 40px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
+  }
+
+  #bot-customer-design .bot-card h2 {
+    text-align: center;
+    color: var(--color-acento);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+    letter-spacing: 0.3px;
+  }
+
+  #bot-customer-design .form-group {
+    margin-bottom: 14px;
+  }
+
+  #bot-customer-design label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  #bot-customer-design input[type="text"],
+  #bot-customer-design input[type="email"],
+  #bot-customer-design input[type="tel"] {
+    width: 100%;
+    border: 1px solid #d0d0d0;
+    border-radius: 7px;
+    padding: 10px 13px;
+    font-size: 0.92rem;
+    font-family: 'Roboto', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+    color: #222;
+  }
+
+  #bot-customer-design input[type="text"]:focus,
+  #bot-customer-design input[type="email"]:focus,
+  #bot-customer-design input[type="tel"]:focus {
+    border-color: var(--color-acento);
+  }
+
+  #bot-customer-design .iti { width: 100%; }
+
+  #bot-customer-design .captcha-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #bot-customer-design .captcha-row iframe {
+    flex-shrink: 0;
+    border: 1px solid #d0d0d0;
+    border-radius: 7px;
+  }
+
+  #bot-customer-design .captcha-row input { flex: 1; }
+
+  #bot-customer-design .checkboxes { margin: 14px 0 20px; }
+
+  #bot-customer-design .check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.76rem;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 8px;
+    cursor: pointer;
+    line-height: 1.4;
+  }
+
+  #bot-customer-design .check-label input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--color-acento);
+  }
+
+  #bot-customer-design .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-acento);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.97rem;
+    font-weight: 700;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  #bot-customer-design .btn-submit:hover    { opacity: 0.85; }
+  #bot-customer-design .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  #bot-customer-design .select2-container  { width: 100% !important; }
+  #bot-customer-design #product-container  { display: none; }
+
+  @media (max-width: 540px) {
+    #bot-customer-design .bot-card { padding: 24px 18px; }
+  }
+</style>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  HTML                                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="bot-wrapper">
+  <div class="bot-card">
+
+    <h2>Solicita tu cotización</h2>
+
+    <form id="cotizacion-form" onsubmit="return false;">
+
+      <!-- Producto — se muestra cuando productsList carga -->
+      <div class="form-group" id="product-container">
+        <label for="model">Producto</label>
+        <select id="model" name="model">
+          <option value="">Selecciona un producto...</option>
+        </select>
+      </div>
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label for="firstName">Nombre</label>
+        <input type="text" id="firstName" placeholder="Tu nombre" required>
+      </div>
+
+      <!-- Apellido -->
+      <div class="form-group">
+        <label for="lastName">Apellido</label>
+        <input type="text" id="lastName" placeholder="Tu apellido" required>
+      </div>
+
+      <!-- Celular -->
+      <div class="form-group">
+        <label for="phone">Celular</label>
+        <input type="tel" id="phone" placeholder="Número de celular">
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+      </div>
+
+      <!-- Captcha -->
+      <div class="form-group">
+        <label>Código de verificación</label>
+        <div class="captcha-row">
+          <iframe id="captcha-frame" width="130" height="50" scrolling="no"></iframe>
+          <input type="text" id="confirmationCode" placeholder="Ingresa el código" required>
+        </div>
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="checkboxes">
+        <label class="check-label">
+          <input type="checkbox" id="authorization" required>
+          Autorizo el tratamiento de mis datos personales según la política de privacidad.
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="promotions">
+          Deseo recibir información sobre productos y promociones.
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit" id="btn-submit" onclick="submitForm(event)">
+        Cotizar ahora
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SCRIPTS — orden exacto                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.nodriza.io/sdk/nodriza@lastest/nodriza-sdk.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════════
+var domain              = 'customer-design.prolibu.com';
+var botName             = 'botprueba';
+const bearerToken       = 'a6a0278f-b899-44ec-9870-417381a5b6dc';
+const currency          = 'COP';
+const filtroProductos   = '';
+const filtroProductos2  = '';
+const rolesString       = 'agent';
+const useWebhookHubspot = false;
+const customAttributes  = [];
+
+// ══════════════════════════════════════════════════════════════
+// ESTADO INTERNO
+// ══════════════════════════════════════════════════════════════
+var productsList    = [];
+var agentsList      = [];
+var fullPhoneNumber = '';
+var iti;
+
+// ══════════════════════════════════════════════════════════════
+// FUNCIONES BASE
+// ══════════════════════════════════════════════════════════════
+
+function fetchData(url, method, params, headers, successCallback, errorCallback) {
+  $.ajax({
+    url:     url,
+    type:    method,
+    data:    params,
+    headers: headers,
+    success: function (res) { successCallback(res); },
+    error:   function (err) { errorCallback(err); }
+  });
+}
+
+function loadAgents() {
+  var url = 'https://' + domain + '/v1/publicservices/getAgents?roles=' + encodeURIComponent(rolesString);
+  fetchData(url, 'GET', {}, {}, function (res) {
+    agentsList = res || [];
+    console.log('agentsList:', agentsList.length, 'items');
+  }, function (err) {
+    console.error('Error loadAgents:', err);
+  });
+}
+
+function loadProducts() {
+  var url     = 'https://' + domain + '/v1/product?disabled=false';
+  var headers = { Authorization: 'Bearer ' + bearerToken };
+  fetchData(url, 'GET', {}, headers, function (res) {
+    var items = res.data || res || [];
+    productsList = items.map(function (p) {
+      return {
+        sku:      p.sku,
+        name:     p.name,
+        disabled: p.disabled
+      };
+    });
+    console.log('productsList:', productsList.length, 'items');
+    $('#model').html(getModelOptions());
+    $('#model').trigger('change');
+    $('#product-container').show();
+  }, function (err) {
+    console.error('Error loadProducts:', err);
+  });
+}
+
+function getModelOptions() {
+  var prods = _.sortBy(productsList.filter(function (p) { return !p.disabled; }), 'name');
+  var opts  = '<option value="">Selecciona un producto...</option>';
+  prods.forEach(function (p) {
+    opts += '<option value="' + p.sku + '">' + p.name + '</option>';
+  });
+  return opts;
+}
+
+function getProductsBy(key, values) {
+  return productsList.filter(function (p) {
+    return values.indexOf(p[key]) !== -1;
+  });
+}
+
+function updateFullPhoneNumber() {
+  if (iti) fullPhoneNumber = iti.getNumber();
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  if (!$('#authorization').is(':checked')) {
+    alert('Debes aceptar la autorización de datos para continuar.');
+    return;
+  }
+  $('#btn-submit').prop('disabled', true).text('Enviando...');
+  var code = $('#confirmationCode').val();
+  nodriza.config({ domain: domain });
+  nodriza.api.confirmationCode.confirm({ code: code }, function (err, res) {
+    if (err || !res || !res.hash) {
+      alert('Código de verificación incorrecto. Intenta de nuevo.');
+      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      return;
+    }
+    createProposal(res.hash);
+  });
+}
+
+function createProposal(hash) {
+  updateFullPhoneNumber();
+
+  // Asesor automático: primer agente de la lista
+  var agentEmail = agentsList.length > 0 ? agentsList[0].email : '';
+
+  var selectedSku  = $('#model').val();
+  var selectedProd = getProductsBy('sku', [selectedSku]);
+  var firstName    = $('#firstName').val().trim();
+  var lastName     = $('#lastName').val().trim();
+
+  var payload = {
+    chatbot: botName,
+    to: {
+      firstName: firstName,
+      lastName:  lastName,
+      mobile:    fullPhoneNumber,
+      email:     $('#email').val().trim(),
+      agent:     agentEmail
+    },
+    doc: {
+      title:    'Cotización ' + firstName + ' ' + lastName + ' - ' + (selectedProd[0] ? selectedProd[0].name : ''),
+      products: [{ id: selectedSku, quantity: 1 }],
+      status:   'Ready',
+      currency: currency,
+      metadata: {
+        webhook:          useWebhookHubspot,
+        customAttributes: customAttributes
+      },
+      dic: { hash: hash }
+    },
+    emailClient:        true,
+    emailAgent:         true,
+    assignedAgentEmail: agentEmail
+  };
+
+  nodriza.config({ domain: domain });
+  nodriza.api.proposalbot.generate(payload, function (err, res) {
+    if (err) {
+      console.error('Error createProposal:', err);
+      alert('Ocurrió un error al generar la cotización. Intenta de nuevo.');
+      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      return;
+    }
+    if (res && res.url) {
+      window.location.href = res.url;
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+$(document).ready(function () {
+
+  iti = window.intlTelInput(document.querySelector('#phone'), {
+    initialCountry:     'co',
+    preferredCountries: ['co', 'mx', 'us'],
+    utilsScript:        'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+  });
+
+  $('#model').select2({ width: '100%' });
+
+  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
+
+  loadAgents();
+  loadProducts();
+
+  $('#phone').on('input change', function () {
+    updateFullPhoneNumber();
+  });
+
+});
+</script>

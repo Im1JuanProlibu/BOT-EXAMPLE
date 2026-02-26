@@ -1,0 +1,562 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║              PLANTILLA BASE — Prolibu Quotation Bot          ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  Para usar con un cliente nuevo:                             ║
+  ║  1. Duplicar este archivo → CLIENTE-bot.html                 ║
+  ║  2. Reemplazar CLIENTE por el nombre real del cliente        ║
+  ║  3. Llenar las variables de configuración (sección ①)        ║
+  ║  4. Actualizar loader.js con REPO_RAW y CONTAINER_ID         ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  CSS                                                       -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="https://s3.amazonaws.com/cdn.nodriza.io/assets/css/chatbot.automotriz.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ── Variables de diseño — cambiar por cliente ── */
+  #bot-CLIENTE {
+    --color-acento:     #e63329;   /* Color principal del botón y títulos   */
+    --color-fondo:      #1a1a1a;   /* Color de fondo si no hay imagen        */
+    --fuente:           'Roboto', sans-serif;
+  }
+
+  /* ── Layout principal ── */
+  #bot-CLIENTE {
+    font-family: var(--fuente);
+    box-sizing: border-box;
+  }
+
+  #bot-CLIENTE *,
+  #bot-CLIENTE *::before,
+  #bot-CLIENTE *::after {
+    box-sizing: inherit;
+  }
+
+  #bot-CLIENTE .bot-wrapper {
+    min-height: 100vh;
+    background-color: var(--color-fondo);
+    /* ↓ Reemplazar la URL por la imagen o video de fondo del cliente */
+    background-image: url('');
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* ── Tarjeta del formulario ── */
+  #bot-CLIENTE .bot-card {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 12px;
+    padding: 32px 36px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  #bot-CLIENTE .bot-logo {
+    display: block;
+    max-width: 160px;
+    margin: 0 auto 20px;
+  }
+
+  #bot-CLIENTE .bot-card h2 {
+    text-align: center;
+    color: var(--color-acento);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 24px;
+  }
+
+  /* ── Grupos de campo ── */
+  #bot-CLIENTE .form-group {
+    margin-bottom: 14px;
+  }
+
+  #bot-CLIENTE label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 5px;
+  }
+
+  #bot-CLIENTE input[type="text"],
+  #bot-CLIENTE input[type="email"],
+  #bot-CLIENTE input[type="tel"] {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.92rem;
+    font-family: var(--fuente);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  #bot-CLIENTE input[type="text"]:focus,
+  #bot-CLIENTE input[type="email"]:focus,
+  #bot-CLIENTE input[type="tel"]:focus {
+    border-color: var(--color-acento);
+  }
+
+  /* ── intl-tel-input ocupa todo el ancho ── */
+  #bot-CLIENTE .iti {
+    width: 100%;
+  }
+
+  /* ── Fila del captcha ── */
+  #bot-CLIENTE .captcha-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #bot-CLIENTE .captcha-row iframe {
+    flex-shrink: 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  #bot-CLIENTE .captcha-row input {
+    flex: 1;
+  }
+
+  /* ── Checkboxes ── */
+  #bot-CLIENTE .checkboxes {
+    margin: 14px 0 18px;
+  }
+
+  #bot-CLIENTE .check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  #bot-CLIENTE .check-label input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── Botón submit ── */
+  #bot-CLIENTE .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-acento);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--fuente);
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  #bot-CLIENTE .btn-submit:hover   { opacity: 0.88; }
+  #bot-CLIENTE .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Select2 ── */
+  #bot-CLIENTE .select2-container { width: 100% !important; }
+
+  /* ── Contenedores con show/hide lógico ── */
+  #bot-CLIENTE #product-container  { display: none; }
+  #bot-CLIENTE #category-container { display: none; }
+  #bot-CLIENTE #category2-container { display: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 560px) {
+    #bot-CLIENTE .bot-card {
+      padding: 24px 20px;
+    }
+  }
+</style>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  HTML                                                      -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="bot-wrapper">
+  <div class="bot-card">
+
+    <!-- Logo del cliente (opcional) -->
+    <!-- <img class="bot-logo" src="URL_DEL_LOGO" alt="Logo"> -->
+
+    <h2>Solicita tu cotización</h2>
+
+    <form id="cotizacion-form" onsubmit="return false;">
+
+      <!-- ① Filtro de categoría principal -->
+      <div class="form-group" id="category-container">
+        <label for="category">Categoría</label>
+        <select id="category" name="category">
+          <option value="">Selecciona una categoría...</option>
+        </select>
+      </div>
+
+      <!-- ② Filtro de subcategoría (solo si filtroProductos2 está activo) -->
+      <div class="form-group" id="category2-container">
+        <label for="category2">Subcategoría</label>
+        <select id="category2" name="category2">
+          <option value="">Selecciona una subcategoría...</option>
+        </select>
+      </div>
+
+      <!-- ③ Producto -->
+      <div class="form-group" id="product-container">
+        <label for="model">Producto</label>
+        <select id="model" name="model">
+          <option value="">Selecciona un producto...</option>
+        </select>
+      </div>
+
+      <!-- ④ Asesor (ocultar con display:none si no aplica) -->
+      <div class="form-group" id="agent-container">
+        <label for="agent">Asesor</label>
+        <select id="agent" name="agent">
+          <option value="">Selecciona un asesor...</option>
+        </select>
+      </div>
+
+      <!-- ⑤ Datos personales -->
+      <div class="form-group">
+        <label for="firstName">Nombre</label>
+        <input type="text" id="firstName" placeholder="Tu nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Apellido</label>
+        <input type="text" id="lastName" placeholder="Tu apellido" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Celular</label>
+        <input type="tel" id="phone" placeholder="Número de celular">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+      </div>
+
+      <!-- ⑥ Captcha -->
+      <div class="form-group">
+        <label>Código de verificación</label>
+        <div class="captcha-row">
+          <iframe id="captcha-frame" width="130" height="50" scrolling="no"></iframe>
+          <input type="text" id="confirmationCode" placeholder="Ingresa el código" required>
+        </div>
+      </div>
+
+      <!-- ⑦ Checkboxes -->
+      <div class="checkboxes">
+        <label class="check-label">
+          <input type="checkbox" id="authorization" required>
+          Autorizo el tratamiento de mis datos personales según la política de privacidad.
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="promotions">
+          Deseo recibir información sobre productos y promociones.
+        </label>
+      </div>
+
+      <!-- ⑧ Submit -->
+      <button type="submit" class="btn-submit" id="btn-submit" onclick="submitForm(event)">
+        Cotizar ahora
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SCRIPTS — cargar en este orden exacto                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.nodriza.io/sdk/nodriza@lastest/nodriza-sdk.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// ①  VARIABLES DE CONFIGURACIÓN — CAMBIAR POR CLIENTE
+// ══════════════════════════════════════════════════════════════
+var domain              = 'CLIENTE.prolibu.com';   // Dominio del cliente en Prolibu
+var botName             = 'nombre-del-bot';         // Slug del proposalbot en Prolibu
+const bearerToken       = 'xxxx-xxxx-xxxx-xxxx';   // Token Bearer para la API
+const currency          = 'COP';                   // Moneda: COP, USD, etc.
+const filtroProductos   = '';                       // 'Pricing List' | 'Product' | '' (sin filtro)
+const filtroProductos2  = '';                       // Segundo filtro opcional — mismo formato
+const rolesString       = 'agent, admin';           // Roles de agentes, separados por coma
+const useWebhookHubspot = false;                   // true solo si el cliente tiene HubSpot
+const customAttributes  = [];                      // Solo si useWebhookHubspot = true
+
+// ══════════════════════════════════════════════════════════════
+// ②  ESTADO INTERNO — NO MODIFICAR
+// ══════════════════════════════════════════════════════════════
+var productsList    = [];
+var agentsList      = [];
+var categoriesList  = [];
+var fullPhoneNumber = '';
+var iti;  // instancia de intl-tel-input
+
+// ══════════════════════════════════════════════════════════════
+// ③  FUNCIONES BASE
+// ══════════════════════════════════════════════════════════════
+
+/** Wrapper genérico de AJAX. Todas las llamadas a la API pasan por aquí. */
+function fetchData(url, method, params, headers, successCallback, errorCallback) {
+  $.ajax({
+    url:     url,
+    type:    method,
+    data:    params,
+    headers: headers,
+    success: function (res) { successCallback(res); },
+    error:   function (err) { errorCallback(err); }
+  });
+}
+
+/** Carga los agentes con los roles configurados y puebla #agent. */
+function loadAgents() {
+  var url = 'https://' + domain + '/v1/publicservices/getAgents?roles=' + encodeURIComponent(rolesString);
+  fetchData(url, 'GET', {}, {}, function (res) {
+    agentsList = res || [];
+    var opts = '<option value="">Selecciona un asesor...</option>';
+    agentsList.forEach(function (a) {
+      opts += '<option value="' + a.email + '">' + a.firstName + ' ' + a.lastName + '</option>';
+    });
+    $('#agent').html(opts);
+    ordenarOpciones('#agent');
+    $('#agent').trigger('change');
+    console.log('agentsList:', agentsList.length, 'items');
+  }, function (err) {
+    console.error('Error loadAgents:', err);
+  });
+}
+
+/** Carga productos activos y puebla #model (o espera a que haya categoría seleccionada). */
+function loadProducts() {
+  var url     = 'https://' + domain + '/v1/product?disabled=false';
+  var headers = { Authorization: 'Bearer ' + bearerToken };
+  fetchData(url, 'GET', {}, headers, function (res) {
+    var items = res.data || res || [];
+    productsList = items.map(function (p) {
+      return {
+        sku:         p.sku,
+        name:        p.name,
+        category:    p.category     ? p.category.name     : '',
+        pricingList: p.pricingList  ? p.pricingList.name  : '',
+        disabled:    p.disabled
+      };
+    });
+    console.log('productsList:', productsList.length, 'items');
+    if (!filtroProductos) {
+      // Sin filtro → mostrar todos los productos directamente
+      $('#model').html(getModelOptions());
+      $('#model').trigger('change');
+      $('#product-container').show();
+    }
+  }, function (err) {
+    console.error('Error loadProducts:', err);
+  });
+}
+
+/** Carga categorías y puebla #category (y #category2 si aplica). */
+function loadCategories() {
+  if (!filtroProductos) return; // Sin filtro → no hace falta cargar categorías
+  var url     = 'https://' + domain + '/v1/category';
+  var headers = { Authorization: 'Bearer ' + bearerToken };
+  fetchData(url, 'GET', {}, headers, function (res) {
+    var items = res.data || res || [];
+    categoriesList = items;
+    var opts = '<option value="">Selecciona una categoría...</option>';
+    items.forEach(function (c) {
+      opts += '<option value="' + c.name + '">' + c.name + '</option>';
+    });
+    $('#category').html(opts);
+    ordenarOpciones('#category');
+    $('#category-container').show();
+    if (filtroProductos2) $('#category2-container').show();
+    console.log('categoriesList:', categoriesList.length, 'items');
+  }, function (err) {
+    console.error('Error loadCategories:', err);
+  });
+}
+
+/** Devuelve los productos filtrados según las categorías seleccionadas. */
+function getSelectedProducts() {
+  var cat1 = $('#category').val();
+  var cat2 = $('#category2').val();
+  return productsList.filter(function (p) {
+    if (p.disabled) return false;
+    var match1 = true;
+    var match2 = true;
+    if (filtroProductos  === 'Pricing List' && cat1) match1 = p.pricingList === cat1;
+    if (filtroProductos  === 'Product'      && cat1) match1 = p.category    === cat1;
+    if (filtroProductos2 === 'Pricing List' && cat2) match2 = p.pricingList === cat2;
+    if (filtroProductos2 === 'Product'      && cat2) match2 = p.category    === cat2;
+    return match1 && match2;
+  });
+}
+
+/** Genera el HTML de <option> para #model, ordenado alfabéticamente. */
+function getModelOptions() {
+  var prods = _.sortBy(getSelectedProducts(), 'name');
+  var opts  = '<option value="">Selecciona un producto...</option>';
+  prods.forEach(function (p) {
+    opts += '<option value="' + p.sku + '">' + p.name + '</option>';
+  });
+  return opts;
+}
+
+/** Busca productos en productsList por cualquier campo. */
+function getProductsBy(key, values) {
+  return productsList.filter(function (p) {
+    return values.indexOf(p[key]) !== -1;
+  });
+}
+
+/** Ordena las opciones de un <select> alfabéticamente (conserva la primera opción). */
+function ordenarOpciones(selector) {
+  var $sel  = $(selector);
+  var $opts = $sel.find('option:not(:first)').sort(function (a, b) {
+    return $(a).text().localeCompare($(b).text());
+  });
+  $sel.find('option:not(:first)').remove();
+  $sel.append($opts);
+}
+
+/** Muestra u oculta el contenedor de producto según si hay categoría seleccionada. */
+function toggleContainer() {
+  var cat = $('#category').val();
+  if (cat) {
+    $('#product-container').show();
+    $('#model').html(getModelOptions()).trigger('change');
+  } else {
+    $('#product-container').hide();
+    $('#model').html('<option value="">Selecciona un producto...</option>').trigger('change');
+  }
+}
+
+/** Actualiza fullPhoneNumber en formato E.164 (+573001234567). */
+function updateFullPhoneNumber() {
+  if (iti) fullPhoneNumber = iti.getNumber();
+}
+
+/** Valida el checkbox de autorización y el captcha antes de generar la propuesta. */
+function submitForm(e) {
+  e.preventDefault();
+  if (!$('#authorization').is(':checked')) {
+    alert('Debes aceptar la autorización de datos para continuar.');
+    return;
+  }
+  $('#btn-submit').prop('disabled', true).text('Enviando...');
+  var code = $('#confirmationCode').val();
+  nodriza.config({ domain: domain });
+  nodriza.api.confirmationCode.confirm({ code: code }, function (err, res) {
+    if (err || !res || !res.hash) {
+      alert('Código de verificación incorrecto. Intenta de nuevo.');
+      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      return;
+    }
+    createProposal(res.hash);
+  });
+}
+
+/** Construye el payload y hace el POST a /v1/proposalbot/generate. */
+function createProposal(hash) {
+  updateFullPhoneNumber();
+  var selectedSku  = $('#model').val();
+  var selectedProd = getProductsBy('sku', [selectedSku]);
+  var agentEmail   = $('#agent').val();
+  var firstName    = $('#firstName').val().trim();
+  var lastName     = $('#lastName').val().trim();
+
+  var payload = {
+    chatbot: botName,
+    to: {
+      firstName: firstName,
+      lastName:  lastName,
+      mobile:    fullPhoneNumber,
+      email:     $('#email').val().trim(),
+      agent:     agentEmail
+    },
+    doc: {
+      title:    'Cotización ' + firstName + ' ' + lastName + ' - ' + (selectedProd[0] ? selectedProd[0].name : ''),
+      products: [{ id: selectedSku, quantity: 1 }],
+      status:   'Ready',
+      currency: currency,
+      metadata: {
+        webhook:          useWebhookHubspot,
+        customAttributes: customAttributes
+      },
+      dic: { hash: hash }
+    },
+    emailClient:        true,
+    emailAgent:         true,
+    assignedAgentEmail: agentEmail
+  };
+
+  nodriza.config({ domain: domain });
+  nodriza.api.proposalbot.generate(payload, function (err, res) {
+    if (err) {
+      console.error('Error createProposal:', err);
+      alert('Ocurrió un error al generar la cotización. Intenta de nuevo.');
+      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      return;
+    }
+    if (res && res.url) {
+      window.location.href = res.url; // redirige a WhatsApp con el link de la cotización
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// ④  INICIALIZACIÓN
+// ══════════════════════════════════════════════════════════════
+$(document).ready(function () {
+
+  // Inicializar intl-tel-input
+  iti = window.intlTelInput(document.querySelector('#phone'), {
+    initialCountry:     'co',
+    preferredCountries: ['co', 'mx', 'us'],
+    utilsScript:        'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+  });
+
+  // Inicializar Select2
+  $('#agent, #model, #category, #category2').select2({ width: '100%' });
+
+  // Cargar captcha
+  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
+
+  // Cargar datos de la API en paralelo
+  loadAgents();
+  loadProducts();
+  loadCategories();
+
+  // Actualizar productos al cambiar de categoría
+  $('#category, #category2').on('change', function () {
+    if (filtroProductos) toggleContainer();
+  });
+
+  // Actualizar teléfono al escribir
+  $('#phone').on('input change', function () {
+    updateFullPhoneNumber();
+  });
+
+});
+</script>
