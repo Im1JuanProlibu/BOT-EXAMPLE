@@ -380,6 +380,199 @@ const customAttributes = [
 
 ---
 
+## Ejemplo completo — customer-design-bot.html
+
+Documentación del bot implementado para el cliente **Customer Design** (`customer-design.prolibu.com`). Sirve como referencia para construir bots similares.
+
+---
+
+### Configuración
+
+```js
+var domain              = 'customer-design.prolibu.com';
+var botName             = 'botprueba';
+const bearerToken       = 'a6a0278f-b899-44ec-9870-417381a5b6dc';
+const currency          = 'COP';
+const filtroProductos   = '';       // Sin filtro: todos los productos activos
+const filtroProductos2  = '';
+const rolesString       = 'agent';
+const useWebhookHubspot = false;    // Sin HubSpot
+const customAttributes  = [];
+
+var nodriza = new Nodriza({ hostname: domain }); // ← Instanciar siempre aquí
+```
+
+---
+
+### Tipo de bot
+
+- **Sin filtros de categoría**: todos los productos activos aparecen directamente en el selector de modelos. `#product-container` siempre visible.
+- **Asesor automático**: no hay `<select>` de asesor visible. El asesor se asigna automáticamente tomando el primero de la lista:
+  ```js
+  var agentEmail = agentsList.length > 0 ? agentsList[0].email : '';
+  ```
+- **Sin HubSpot**: `useWebhookHubspot = false`, `customAttributes = []`.
+- **Redirección directa**: al generar la propuesta, redirige a `res.url` directamente (no a WhatsApp).
+
+---
+
+### Diseño — Layout split panel
+
+El layout divide la pantalla en dos zonas: imagen de fondo a la izquierda y panel oscuro a la derecha.
+
+**Técnica clave para la imagen de fondo:**
+
+El contenedor del bot está embebido dentro de la plataforma Prolibu, que no tiene altura fija. Para que la imagen se vea siempre, se usa una capa absoluta en lugar de un `div` con flex:
+
+```html
+<div class="bot-wrapper">               <!-- position: relative; min-height: 100vh -->
+  <div class="bot-bg"></div>            <!-- position: absolute; inset: 0 — la imagen -->
+  <div class="bot-panel">...</div>      <!-- position: relative; z-index: 1; margin-left: auto -->
+</div>
+```
+
+```css
+/* Capa de imagen — siempre ocupa todo el wrapper */
+.bot-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('URL_DE_LA_IMAGEN');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+/* Degradado sobre la imagen para suavizar el borde con el panel */
+.bot-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.1) 40%, rgba(9,9,14,0.8) 100%);
+}
+
+/* Panel flotante a la derecha */
+.bot-panel {
+  position: relative;
+  z-index: 1;
+  width: 460px;
+  max-width: 100%;
+  min-height: 100vh;
+  margin-left: auto;    /* ← flota a la derecha sin necesitar flex */
+}
+```
+
+> **Por qué no `flex` ni `background-image` en el contenedor padre**: el contenedor de la plataforma colapsa si no tiene contenido. La capa absoluta (`inset: 0`) se ancla al `position: relative` del wrapper y siempre se expande al tamaño del contenido, independientemente de la plataforma.
+
+---
+
+### Colores — CSS Variables
+
+```css
+#bot-customer-design {
+  --orange:      #a855f7;   /* violeta/morado — acento principal */
+  --orange-deep: #9333ea;   /* hover del botón */
+  --panel:       #09090e;   /* fondo del panel */
+  --panel-soft:  #111118;
+  --input-bg:    #16161f;   /* fondo de inputs */
+  --input-bd:    #2a2a38;   /* borde de inputs */
+  --input-focus: #a855f7;   /* borde al enfocar */
+  --label:       #a855f7;   /* color de section-labels */
+  --text:        #f1f5f9;
+  --text-soft:   #8892a4;
+  --white:       #ffffff;
+}
+```
+
+> Las variables usan `--orange` como nombre genérico (heredado del template base) aunque el color real sea violeta. Al cambiar de cliente, solo se actualiza el valor hex.
+
+---
+
+### Captcha — Configuración
+
+El captcha se divide en **dos `form-group` independientes**: uno para el iframe y otro para el input. No van juntos en el mismo contenedor.
+
+```html
+<!-- Grupo 1: imagen del captcha -->
+<div class="form-group">
+  <iframe id="captcha-frame" width="200" height="70" scrolling="no"
+    style="border:none; border-radius:8px; background:#000; display:block;"></iframe>
+</div>
+
+<!-- Grupo 2: input del código (separado) -->
+<div class="form-group">
+  <input type="text" id="confirmationCode" placeholder="Código de verificación" required>
+</div>
+```
+
+```js
+// En $(document).ready():
+$('#captcha-frame').attr('src',
+  'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4'
+);
+```
+
+**Parámetros del captcha:**
+- `color=white` — dígitos blancos (necesario con fondo oscuro)
+- `noise=2` — nivel de ruido visual
+- `size=4` — cantidad de dígitos
+- `background:#000` en el iframe — fondo negro para que los dígitos blancos sean visibles
+
+> Sin `background:#000` en el iframe, los dígitos blancos son invisibles sobre el fondo blanco por defecto del `<iframe>`.
+
+---
+
+### Teléfono — intl-tel-input
+
+```js
+iti = window.intlTelInput(document.querySelector('#phone'), {
+  initialCountry: 'co',
+  preferredCountries: ['co', 'mx', 'us'],
+  utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+});
+```
+
+**CSS crítico para que el campo no se vea mal:**
+
+```css
+/* El contenedor .iti debe ocupar todo el ancho */
+.iti {
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Padding solo para el tel — diferente al text/email */
+.iti input[type="tel"] {
+  padding: 12px 54px !important;  /* 54px izquierda para dejar espacio a la bandera */
+}
+```
+
+> El `padding-left: 54px` en el `input[type="tel"]` es necesario para que el texto del número no quede debajo de la bandera/código de país que inyecta intl-tel-input.
+
+---
+
+### Imagen de fondo usada
+
+```
+https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png
+```
+
+---
+
+### Loader.js configurado para este cliente
+
+```js
+var REPO_RAW    = 'https://raw.githubusercontent.com/Im1JuanProlibu/BOT-EXAMPLE/main/customer-design-bot.html';
+var CONTAINER_ID = 'bot-customer-design';
+```
+
+**Lo que va en el editor de Prolibu:**
+```html
+<div id="bot-customer-design">Cargando...</div>
+<script src="https://Im1JuanProlibu.github.io/BOT-EXAMPLE/loader.js"></script>
+```
+
+---
+
 ## Debug rápido — F12 Console
 
 | Log / Error | Qué significa | Solución |
