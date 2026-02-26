@@ -210,9 +210,17 @@ Estas variables están al inicio del `<script>` en el archivo `{cliente}-bot.htm
 | `currency` | string | Moneda de las propuestas: `COP`, `USD`, etc. |
 | `filtroProductos` | string | Primer filtro de productos: `"Pricing List"`, `"Product"` o vacío |
 | `filtroProductos2` | string | Segundo filtro opcional: igual que el anterior. Dejar vacío si no aplica |
-| `rolesString` | string | Roles de agentes a cargar, separados por coma. Ej: `"agent, admin"` |
+| `rolesString` | string | Rol de agentes a cargar. Ej: `"agent"` |
 | `useWebhookHubspot` | boolean | `true` activa la integración con HubSpot. `false` la desactiva *(opcional)* |
 | `customAttributes` | array | Campos personalizados para HubSpot. Solo necesario si `useWebhookHubspot = true` |
+
+**Inmediatamente después de las variables, instanciar el SDK:**
+
+```js
+var nodriza = new Nodriza({ hostname: domain });
+```
+
+> **Crítico:** El SDK expone la clase `Nodriza` (con mayúscula). Hay que instanciarla con `new` y asignarla a `nodriza` (minúscula). Si no se hace esto, todas las llamadas a `nodriza.api.*` fallan con `nodriza is not defined`.
 
 ---
 
@@ -224,7 +232,22 @@ Todo bot está compuesto por las mismas funciones esenciales:
 Función genérica de AJAX. Todas las llamadas a la API pasan por aquí. Usa jQuery `$.ajax` internamente.
 
 ### `loadAgents()`
-Consulta `GET /v1/publicservices/getAgents` (endpoint público, sin auth) con los roles configurados en `rolesString`. Construye el array `agentsList` y puebla el `<select#agent>` con Select2.
+Consulta `GET /v1/publicservices/getAgents` (endpoint público, sin auth). Los parámetros `status` y `roles` se pasan como **data params de jQuery** (no en la query string de la URL), de lo contrario el servidor devuelve 400:
+
+```js
+fetchData(
+  'https://' + domain + '/v1/publicservices/getAgents',
+  'GET',
+  { status: 'active', roles: [rolesString] },  // ← data params, NO query string
+  {},
+  function(res) { ... }
+);
+```
+
+Construye el array `agentsList`. La respuesta puede ser un array directo o un objeto con `.results`; hay que manejar ambos casos:
+```js
+var agents = Array.isArray(res) ? res : (res.results || []);
+```
 
 ### `loadProducts()`
 Consulta `GET /v1/product?disabled=false` con el `bearerToken`. Construye `productsList` con `pricingList`, `category`, `sku`, `name` y `disabled`. Puebla el `<select#model>` con Select2.
@@ -252,6 +275,8 @@ Combina el código de marcación del país (obtenido de intl-tel-input) con el n
 
 ### `submitForm(e)`
 Valida que el checkbox de autorización esté marcado, luego llama a `nodriza.api.confirmationCode.confirm()` para validar el captcha. Si el captcha es válido recibe un `hash` y llama a `createProposal(json)`.
+
+> No llamar a `nodriza.config()` — ese método no existe en el SDK. La configuración se pasa al instanciar con `new Nodriza({ hostname: domain })`.
 
 ### `createProposal(json)`
 Construye el payload completo y hace el POST a `/v1/proposalbot/generate` via el SDK de Nodriza. Si la respuesta incluye `res.url`, redirige al usuario a WhatsApp con el link de la cotización.
@@ -357,14 +382,25 @@ const customAttributes = [
 
 ## Debug rápido — F12 Console
 
-| Log | Qué significa |
-|-----|---------------|
-| `[LOADER] Iniciando...` | El script cargó correctamente |
-| `[LOADER] Respuesta HTTP: 200 OK` | GitHub respondió bien |
-| `[LOADER] Bot completamente cargado.` | Todo listo |
-| `productsList: 0 items` | El filtro de productos no coincide o el token es incorrecto |
-| `agentsList: 0 items` | No hay agentes con el rol configurado en `rolesString` |
-| `[LOADER] Error: HTTP 404` | El archivo HTML no existe en el repo o `REPO_RAW` apunta mal |
+| Log / Error | Qué significa | Solución |
+|-------------|---------------|----------|
+| `[LOADER] Iniciando...` | El script cargó correctamente | — |
+| `[LOADER] Respuesta HTTP: 200 OK` | GitHub respondió bien | — |
+| `[LOADER] Bot completamente cargado.` | Todo listo | — |
+| `productsList: 0 items` | El filtro de productos no coincide o el token es incorrecto | Verificar `bearerToken` y filtros |
+| `agentsList: 0 items` | No hay agentes activos con ese rol | Verificar `rolesString` y que los agentes tengan `status: active` |
+| `[LOADER] Error: HTTP 404` | El archivo HTML no existe en el repo o `REPO_RAW` apunta mal | Verificar la URL en `loader.js` |
+| `nodriza is not defined` | El SDK no se instanció o la URL del SDK es incorrecta | Agregar `var nodriza = new Nodriza({ hostname: domain });` después de las variables de config |
+| `400 Bad Request` en `getAgents` | Los roles se están pasando como query string en la URL | Pasarlos como data params de jQuery: `{ status: 'active', roles: [rolesString] }` |
+| `nodriza.config is not a function` | Se está llamando a un método que no existe | Eliminar `nodriza.config()` — la config se pasa al instanciar |
+
+**Nota sobre la URL del SDK:** la ruta en S3 es literalmente `nodriza@lastest` (con esa ortografía). No cambiarla a `latest` — devuelve 404.
+
+```
+https://s3.amazonaws.com/cdn.nodriza.io/sdk/nodriza@lastest/nodriza-sdk.bundle.js
+                                                      ↑
+                                          Así está en S3 (no es typo)
+```
 
 ---
 
