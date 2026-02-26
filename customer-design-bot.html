@@ -30,37 +30,18 @@
 #bot-customer-design .bot-wrapper {
   display: flex;
   min-height: 100vh;
-}
-
-#bot-customer-design .bot-bg {
-  flex: 1;
-  min-height: 100vh;
+  /* la imagen va en el wrapper para que siempre sea visible */
   background-color: #060608;
+  background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
   background-size: cover;
   background-position: center center;
-  position: relative;
 }
 
-#bot-customer-design .bot-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.2) 50%, rgba(9,9,14,0.7) 100%);
+/* spacer transparente que "deja ver" la imagen de fondo */
+#bot-customer-design .bot-spacer {
+  flex: 1;
+  min-height: 100vh;
 }
-
-/* imagen inyectada como <img> para evitar problemas en contextos embebidos */
-#bot-customer-design .bot-bg img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  z-index: 0;
-}
-
-#bot-customer-design .bot-bg::after { z-index: 1; }
 
 /* ── Panel derecho ─────────────────────────────────────────── */
 #bot-customer-design .bot-panel {
@@ -157,10 +138,6 @@
   display: block !important;
 }
 
-#bot-customer-design .iti input[type="tel"] {
-  width: 100% !important;
-}
-
 #bot-customer-design .iti__selected-flag {
   background: var(--input-bg) !important;
   border-right: 1px solid var(--input-bd);
@@ -169,13 +146,16 @@
 
 #bot-customer-design .iti__country-list {
   background: #1a1a26;
-  border-color: var(--input-bd);
+  border: 1px solid var(--input-bd);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
   color: var(--text);
-  width: 100% !important;
-  max-width: 372px; /* ancho del panel (460) - padding (44x2) */
+  z-index: 9999;
 }
 
-#bot-customer-design .iti__country.iti__highlight { background: #2a2a38; }
+#bot-customer-design .iti__country { padding: 8px 12px; color: var(--text); }
+#bot-customer-design .iti__country.iti__highlight,
+#bot-customer-design .iti__country:hover { background: #2a2a38; }
 #bot-customer-design .iti__dial-code { color: var(--text-soft); }
 
 /* ── Select2 dark ──────────────────────────────────────────── */
@@ -375,9 +355,11 @@
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 780px) {
-  #bot-customer-design .bot-wrapper { flex-direction: column; }
-  #bot-customer-design .bot-bg { min-height: 240px; flex: none; }
-  #bot-customer-design .bot-bg::after { background: rgba(0,0,0,0.4); }
+  #bot-customer-design .bot-wrapper {
+    flex-direction: column;
+    background-position: top center;
+  }
+  #bot-customer-design .bot-spacer { min-height: 200px; flex: none; }
   #bot-customer-design .bot-panel {
     width: 100%; min-width: unset;
     padding: 32px 24px;
@@ -391,10 +373,8 @@
 <!-- HTML -->
 <div class="bot-wrapper">
 
-  <!-- Imagen izquierda -->
-  <div class="bot-bg">
-    <img src="https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png" alt="">
-  </div>
+  <!-- Spacer izquierdo — deja ver la imagen de fondo del wrapper -->
+  <div class="bot-spacer"></div>
 
   <!-- Panel derecho -->
   <div class="bot-panel">
