@@ -29,7 +29,7 @@ Una sola vez, nunca más se toca:
 ```
 Pantalla de login
     └── Usuario ingresa email + password
-            └── POST https://fanalca.prolibu.com/v1/user/login
+            └── POST https://customer-design.prolibu.com/v1/user/login
                     └── Extrae token del response
                         └── Transición → Editor de propuestas
                                 ├── Si el usuario logueado está en la lista de asesores
@@ -46,7 +46,7 @@ Pantalla de login
 ## Configuración del bot
 
 ```js
-var domain      = 'fanalca.prolibu.com';
+var domain      = 'customer-design.prolibu.com';
 var rolesString = 'agent';
 ```
 
@@ -57,7 +57,7 @@ var rolesString = 'agent';
 ## Endpoint de login
 
 ```
-POST https://fanalca.prolibu.com/v1/user/login
+POST https://customer-design.prolibu.com/v1/user/login
 Content-Type: application/json
 
 {
