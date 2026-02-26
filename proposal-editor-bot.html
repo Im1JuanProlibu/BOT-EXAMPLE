@@ -454,76 +454,32 @@
   }
 
   // ── Step 1 → Step 2: cargar propuestas del asesor ────────────
-  // Prueba 4 filtros en cadena hasta encontrar resultados
   function loadProposals() {
     var email = $('#agent-select').val();
     if (!email) return toast('Selecciona un asesor', 'err');
 
-    var agent = agentsList.find(function (a) { return a.email === email; });
-    var firstName = agent ? agent.firstName : '';
-    var agentId   = agent ? agent.id : '';
+    var agent   = agentsList.find(function (a) { return a.email === email; });
+    var agentId = agent ? agent.id : '';
+
+    if (!agentId) return toast('No se encontró el ID del asesor', 'err');
 
     $('#btn-load-proposals').prop('disabled', true);
     $('#sp-load').show();
 
-    function done() {
-      $('#btn-load-proposals').prop('disabled', false);
-      $('#sp-load').hide();
-    }
-
-    function parseList(res) {
-      return Array.isArray(res) ? res : (res.data || res.results || []);
-    }
-
-    // Intento 1: responsible = email
-    console.log('🔍 [1] responsible =', email);
-    api('GET', '/v1/proposal', { responsible: email, limit: 200 },
-      function (r1) {
-        var l1 = parseList(r1);
-        console.log('✅ [1] responsible=' + email + ' →', l1.length, 'resultados', r1);
-        if (l1.length > 0) { done(); return renderProposalStep(l1); }
-
-        // Intento 2: createdBy = email
-        console.log('🔍 [2] createdBy =', email);
-        api('GET', '/v1/proposal', { createdBy: email, limit: 200 },
-          function (r2) {
-            var l2 = parseList(r2);
-            console.log('✅ [2] createdBy=' + email + ' →', l2.length, 'resultados', r2);
-            if (l2.length > 0) { done(); return renderProposalStep(l2); }
-
-            // Intento 3: createdBy = firstName
-            console.log('🔍 [3] createdBy =', firstName);
-            api('GET', '/v1/proposal', { createdBy: firstName, limit: 200 },
-              function (r3) {
-                var l3 = parseList(r3);
-                console.log('✅ [3] createdBy=' + firstName + ' →', l3.length, 'resultados', r3);
-                if (l3.length > 0) { done(); return renderProposalStep(l3); }
-
-                // Intento 4: responsible = agentId
-                console.log('🔍 [4] responsible = id:', agentId);
-                api('GET', '/v1/proposal', { responsible: agentId, limit: 200 },
-                  function (r4) {
-                    var l4 = parseList(r4);
-                    console.log('✅ [4] responsible=' + agentId + ' →', l4.length, 'resultados', r4);
-                    done();
-                    if (l4.length > 0) { return renderProposalStep(l4); }
-                    console.warn('⚠️ Ningún filtro devolvió propuestas. Revisa los logs anteriores para ver qué campo usar.');
-                    toast('Sin propuestas con ningún filtro — revisa la consola', 'err');
-                    renderProposalStep([]);
-                  },
-                  function (e4) { console.error('[4] error:', e4); done(); renderProposalStep([]); }
-                );
-              },
-              function (e3) { console.error('[3] error:', e3); done(); renderProposalStep([]); }
-            );
-          },
-          function (e2) { console.error('[2] error:', e2); done(); renderProposalStep([]); }
-        );
+    console.log('🔍 Cargando propuestas de asesor id:', agentId);
+    api('GET', '/v1/proposal', { createdBy: agentId, limit: 200 },
+      function (res) {
+        var list = Array.isArray(res) ? res : (res.data || res.results || []);
+        console.log('✅ createdBy=' + agentId + ' →', list.length, 'propuestas');
+        $('#btn-load-proposals').prop('disabled', false);
+        $('#sp-load').hide();
+        renderProposalStep(list);
       },
-      function (e1) {
-        console.error('[1] error:', e1);
-        toast('Error ' + e1.status + ' al cargar propuestas', 'err');
-        done();
+      function (e) {
+        console.error('loadProposals error:', e);
+        toast('Error ' + e.status + ' al cargar propuestas', 'err');
+        $('#btn-load-proposals').prop('disabled', false);
+        $('#sp-load').hide();
       }
     );
   }
