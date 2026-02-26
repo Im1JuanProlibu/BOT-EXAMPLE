@@ -4,17 +4,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 
 <style>
-  /* ── Variables ──────────────────────────────────────────────── */
+  /* ── Reset / Variables ──────────────────────────────────────── */
   #bot-fanalca-login {
     --accent:      #e84c1e;
     --accent-deep: #c93f17;
-    --accent-glow: rgba(232,76,30,0.14);
-    --bg:          #07070f;
-    --surface:     rgba(255,255,255,0.025);
-    --surface-2:   rgba(255,255,255,0.045);
-    --border:      rgba(255,255,255,0.07);
-    --text:        #dde3ef;
-    --text-soft:   #5a6478;
+    --accent-glow: rgba(232,76,30,0.16);
+    --bg:          #0a0a12;
+    --surface:     rgba(255,255,255,0.04);
+    --surface-2:   rgba(255,255,255,0.07);
+    --border:      rgba(255,255,255,0.08);
+    --text:        #e2e8f0;
+    --text-soft:   #4a5568;
     --danger:      #f87171;
     --success:     #34d399;
     font-family: 'Inter', sans-serif;
@@ -22,321 +22,519 @@
     background: var(--bg);
     min-height: 100vh;
     color: var(--text);
+    /* Mobile app container */
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
   }
-  #bot-fanalca-login *, #bot-fanalca-login *::before, #bot-fanalca-login *::after { box-sizing: inherit; }
-
-  /* ── Vistas ─────────────────────────────────────────────────── */
+  #bot-fanalca-login *, #bot-fanalca-login *::before, #bot-fanalca-login *::after {
+    box-sizing: inherit;
+  }
   #bot-fanalca-login .view { display: none; }
   #bot-fanalca-login .view.active { display: block; }
 
-  /* ══════════════════════════════════════════════════════════════
-     VIEW LOGIN
-  ══════════════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+  ═══════════════════════════════════════════════════════════════ */
   #bot-fanalca-login .login-wrap {
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    padding: 24px;
+    padding: 32px 24px;
+    flex-direction: column;
+  }
+  #bot-fanalca-login .login-brand {
+    display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;
+  }
+  #bot-fanalca-login .login-brand-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin-bottom: 16px;
+    box-shadow: 0 16px 48px rgba(232,76,30,0.35);
+  }
+  #bot-fanalca-login .login-brand-name {
+    font-size: 1.4rem; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+  }
+  #bot-fanalca-login .login-brand-sub {
+    font-size: 0.75rem; color: var(--text-soft); margin-top: 4px;
   }
   #bot-fanalca-login .login-card {
-    width: 100%; max-width: 380px;
+    width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 20px; padding: 36px 32px;
-  }
-  #bot-fanalca-login .login-logo {
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 28px;
-  }
-  #bot-fanalca-login .login-logo-text {
-    font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: -0.5px;
-  }
-  #bot-fanalca-login .login-logo-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent); margin-left: 4px; margin-bottom: 14px;
+    border-radius: 24px; padding: 28px 24px;
   }
   #bot-fanalca-login .login-title {
-    font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0 0 4px; text-align: center;
+    font-size: 1rem; font-weight: 700; color: #fff; margin: 0 0 20px; text-align: center;
   }
-  #bot-fanalca-login .login-sub {
-    font-size: 0.77rem; color: var(--text-soft); text-align: center; margin: 0 0 28px;
-  }
-  #bot-fanalca-login .field { margin-bottom: 14px; }
-  #bot-fanalca-login .field label {
-    display: block; font-size: 0.72rem; font-weight: 500;
-    color: var(--text-soft); margin-bottom: 7px;
-  }
-  #bot-fanalca-login .field input {
-    width: 100%; background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border); border-radius: 10px;
-    padding: 11px 14px; font-size: 0.875rem; font-family: 'Inter', sans-serif;
-    color: var(--text); outline: none; transition: all 0.2s;
-  }
-  #bot-fanalca-login .field input:focus {
-    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-  #bot-fanalca-login .field input::placeholder { color: var(--text-soft); }
   #bot-fanalca-login .login-err {
     background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25);
-    border-radius: 9px; padding: 10px 14px; font-size: 0.77rem; color: var(--danger);
-    margin-bottom: 14px; display: none; text-align: center;
+    border-radius: 12px; padding: 12px 16px; font-size: 0.8rem; color: var(--danger);
+    margin-bottom: 16px; display: none; text-align: center;
   }
+  #bot-fanalca-login .field { margin-bottom: 12px; }
+  #bot-fanalca-login .field label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--text-soft); margin-bottom: 8px; letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  #bot-fanalca-login .field input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--border); border-radius: 14px;
+    padding: 14px 16px; font-size: 1rem; font-family: 'Inter', sans-serif;
+    color: var(--text); outline: none; transition: all 0.2s;
+    -webkit-appearance: none;
+  }
+  #bot-fanalca-login .field input:focus {
+    border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+  #bot-fanalca-login .field input::placeholder { color: var(--text-soft); }
   #bot-fanalca-login .btn-login {
-    width: 100%; background: var(--accent); color: #fff; border: none;
-    border-radius: 10px; padding: 12px; font-size: 0.875rem; font-weight: 700;
-    font-family: 'Inter', sans-serif; cursor: pointer; margin-top: 6px;
+    width: 100%; background: var(--accent); border: none; border-radius: 16px;
+    padding: 16px; color: #fff; font-size: 1rem; font-weight: 700;
+    font-family: 'Inter', sans-serif; cursor: pointer; margin-top: 8px;
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.15s;
+    transition: all 0.2s; min-height: 52px;
+    box-shadow: 0 8px 24px rgba(232,76,30,0.35);
   }
-  #bot-fanalca-login .btn-login:hover { background: var(--accent-deep); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(232,76,30,0.3); }
-  #bot-fanalca-login .btn-login:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+  #bot-fanalca-login .btn-login:hover   { background: var(--accent-deep); }
+  #bot-fanalca-login .btn-login:active  { transform: scale(0.98); }
+  #bot-fanalca-login .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-  /* ══════════════════════════════════════════════════════════════
-     VIEW APP
-  ══════════════════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════════════════
+     APP HEADER
+  ═══════════════════════════════════════════════════════════════ */
   #bot-fanalca-login .app-header {
+    background: rgba(10,10,18,0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 0 20px;
+    height: 56px;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 28px; border-bottom: 1px solid var(--border);
-    background: rgba(255,255,255,0.015); position: sticky; top: 0; z-index: 10;
+    position: sticky; top: 0; z-index: 200;
   }
-  #bot-fanalca-login .app-header-brand {
-    font-size: 0.88rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 6px;
-  }
-  #bot-fanalca-login .app-header-brand span {
-    display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
-  }
-  #bot-fanalca-login .app-header-user {
-    display: flex; align-items: center; gap: 12px;
-  }
-  #bot-fanalca-login .user-pill {
-    font-size: 0.75rem; color: var(--text-soft);
-    background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: 999px; padding: 4px 12px;
-  }
-  #bot-fanalca-login .btn-logout {
-    background: transparent; border: 1px solid var(--border);
-    color: var(--text-soft); border-radius: 8px; padding: 5px 12px;
-    font-size: 0.75rem; font-family: 'Inter', sans-serif; cursor: pointer;
-    transition: all 0.15s;
-  }
-  #bot-fanalca-login .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-
-  /* ── App content (padding) ───────────────────────────────────── */
-  #bot-fanalca-login .app-body { padding: 40px 28px; }
-  #bot-fanalca-login .ped-wrap { max-width: 560px; margin: 0 auto; }
-
-  /* ── Título de la sección activa ─────────────────────────────── */
-  #bot-fanalca-login .ped-title {
-    font-size: 1.2rem; font-weight: 700; color: #fff; margin: 0 0 4px; letter-spacing: -0.3px;
-  }
-  #bot-fanalca-login .ped-subtitle { font-size: 0.78rem; color: var(--text-soft); margin: 0 0 32px; }
-
-  /* ── Steps ──────────────────────────────────────────────────── */
-  #bot-fanalca-login .ped-steps { display: flex; align-items: flex-start; margin-bottom: 28px; }
-  #bot-fanalca-login .step-node { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-  #bot-fanalca-login .step-line { flex: 1; height: 1px; background: var(--border); margin-top: 14px; transition: background 0.3s; }
-  #bot-fanalca-login .step-line.done { background: rgba(232,76,30,0.4); }
-  #bot-fanalca-login .sdot {
-    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-    background: var(--surface-2); border: 1.5px solid var(--border);
-    color: var(--text-soft); display: flex; align-items: center; justify-content: center;
-    font-weight: 600; font-size: 0.72rem; transition: all 0.25s;
-  }
-  #bot-fanalca-login .sdot.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 4px var(--accent-glow); }
-  #bot-fanalca-login .sdot.done { background: transparent; border-color: var(--accent); color: var(--accent); }
-  #bot-fanalca-login .sdot.done .snum { display: none; }
-  #bot-fanalca-login .sdot.done::after { content: '✓'; font-size: 0.75rem; }
-  #bot-fanalca-login .slabel { font-size: 0.67rem; font-weight: 500; color: var(--text-soft); white-space: nowrap; }
-  #bot-fanalca-login .step-node.s-active .slabel { color: var(--accent); }
-  #bot-fanalca-login .step-node.s-done  .slabel { color: rgba(232,76,30,0.55); }
-
-  /* ── Card ───────────────────────────────────────────────────── */
-  #bot-fanalca-login .ped-card {
+  #bot-fanalca-login .app-header-left  { display: flex; align-items: center; gap: 10px; }
+  #bot-fanalca-login .app-header-right { display: flex; align-items: center; gap: 8px; }
+  #bot-fanalca-login .btn-icon {
+    width: 36px; height: 36px; border-radius: 10px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 16px; padding: 24px; margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.18s; font-size: 1rem;
+    font-family: 'Inter', sans-serif; color: var(--text-soft);
+  }
+  #bot-fanalca-login .btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+  #bot-fanalca-login .header-page {
+    font-size: 0.95rem; font-weight: 700; color: #fff;
+  }
+  #bot-fanalca-login .user-chip {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 5px 12px;
+    font-size: 0.75rem; font-weight: 600; color: var(--text);
+    max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     BOTTOM NAV (mobile tabs)
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 500px;
+    background: rgba(10,10,18,0.97);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: none; /* shown post-login via JS */
+    grid-template-columns: repeat(3, 1fr);
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 200;
+  }
+  #bot-fanalca-login .bottom-nav.visible { display: grid; }
+  #bot-fanalca-login .nav-tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 8px 4px; cursor: pointer; transition: all 0.18s;
+    border: none; background: transparent; font-family: 'Inter', sans-serif;
+    color: var(--text-soft);
+  }
+  #bot-fanalca-login .nav-tab.active { color: var(--accent); }
+  #bot-fanalca-login .nav-tab:active  { transform: scale(0.93); }
+  #bot-fanalca-login .nav-tab-icon { font-size: 1.4rem; line-height: 1; }
+  #bot-fanalca-login .nav-tab-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.02em; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     VIEW SCROLL AREA (accounts for sticky header + bottom nav)
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .view-scroll {
+    padding: 20px 20px 100px; /* 100px bottom = bottom nav height */
+  }
+  #bot-fanalca-login .view-title {
+    font-size: 1.15rem; font-weight: 800; color: #fff; margin: 0 0 20px;
+    letter-spacing: -0.3px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     HOME
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .home-wrap {
+    padding: 24px 20px 100px;
+  }
+  #bot-fanalca-login .home-greeting {
+    font-size: 1.5rem; font-weight: 800; color: #fff;
+    margin: 0 0 4px; letter-spacing: -0.5px; line-height: 1.2;
+  }
+  #bot-fanalca-login .home-greeting em { color: var(--accent); font-style: normal; }
+  #bot-fanalca-login .home-sub {
+    font-size: 0.82rem; color: var(--text-soft); margin: 0 0 28px;
+  }
+  #bot-fanalca-login .home-section-title {
+    font-size: 0.7rem; font-weight: 700; color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px;
+  }
+  #bot-fanalca-login .home-cards {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  #bot-fanalca-login .home-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #bot-fanalca-login .home-card:active {
+    transform: scale(0.98); border-color: var(--accent);
+    background: rgba(232,76,30,0.07);
+  }
+  #bot-fanalca-login .hc-icon-wrap {
+    width: 52px; height: 52px; border-radius: 15px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+  }
+  #bot-fanalca-login .hc-icon-wrap.blue   { background: rgba(96,165,250,0.12); }
+  #bot-fanalca-login .hc-icon-wrap.green  { background: rgba(52,211,153,0.12); }
+  #bot-fanalca-login .hc-icon-wrap.orange { background: rgba(232,76,30,0.12); }
+  #bot-fanalca-login .hc-body { flex: 1; min-width: 0; }
+  #bot-fanalca-login .hc-title {
+    font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 3px;
+  }
+  #bot-fanalca-login .hc-desc {
+    font-size: 0.75rem; color: var(--text-soft); line-height: 1.5;
+  }
+  #bot-fanalca-login .hc-arrow {
+    color: var(--text-soft); font-size: 1rem; flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FILTER BAR
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .filter-bar {
+    display: flex; gap: 8px; margin-bottom: 16px;
+    overflow-x: auto; padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #bot-fanalca-login .filter-bar::-webkit-scrollbar { display: none; }
+  #bot-fanalca-login .filter-btn {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 7px 18px;
+    font-size: 0.77rem; font-weight: 600; color: var(--text-soft);
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.18s;
+    white-space: nowrap; min-height: 36px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #bot-fanalca-login .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PROPOSAL CARDS (list)
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .prop-cards { display: flex; flex-direction: column; gap: 10px; }
+  #bot-fanalca-login .prop-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 18px; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color 0.18s;
+  }
+  #bot-fanalca-login .pc-info {}
+  #bot-fanalca-login .pc-title {
+    font-size: 0.9rem; font-weight: 700; color: #fff;
+    margin-bottom: 6px; line-height: 1.3;
+  }
+  #bot-fanalca-login .pc-meta {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    font-size: 0.72rem; color: var(--text-soft);
+  }
+  #bot-fanalca-login .pc-actions {
+    display: flex; gap: 8px; border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  #bot-fanalca-login .pc-actions a,
+  #bot-fanalca-login .pc-actions button {
+    flex: 1; text-align: center; min-height: 40px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #bot-fanalca-login .prop-empty {
+    text-align: center; padding: 56px 24px;
+    color: var(--text-soft); font-size: 0.85rem; line-height: 1.8;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FORM CARDS
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .ped-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 18px 18px; margin-bottom: 14px;
   }
   #bot-fanalca-login .card-sec {
-    font-size: 0.63rem; font-weight: 700; color: var(--text-soft);
-    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
+    font-size: 0.67rem; font-weight: 700; color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 14px;
   }
-  #bot-fanalca-login .card-sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  #bot-fanalca-login .flabel { font-size: 0.72rem; font-weight: 500; color: var(--text-soft); display: block; margin-bottom: 8px; }
+  #bot-fanalca-login .flabel {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--text-soft); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  #bot-fanalca-login .nat-select,
+  #bot-fanalca-login .nat-input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--border); border-radius: 14px;
+    padding: 13px 15px; font-size: 0.9rem; font-family: 'Inter', sans-serif;
+    color: var(--text); outline: none; transition: border-color 0.2s;
+    -webkit-appearance: none; min-height: 48px;
+  }
+  #bot-fanalca-login .nat-select:focus,
+  #bot-fanalca-login .nat-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  #bot-fanalca-login .nat-input::placeholder { color: var(--text-soft); }
+  #bot-fanalca-login .field { margin-bottom: 12px; }
+  #bot-fanalca-login .field label {
+    display: block; font-size: 0.72rem; font-weight: 600;
+    color: var(--text-soft); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
 
-  /* ── Select2 ─────────────────────────────────────────────────── */
-  #bot-fanalca-login .select2-container { width: 100% !important; }
-  #bot-fanalca-login .select2-container--default .select2-selection--single {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; height: 44px; transition: all 0.2s;
+  /* ═══════════════════════════════════════════════════════════════
+     BUTTONS
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .btn {
+    border: none; border-radius: 12px; padding: 11px 18px;
+    font-size: 0.82rem; font-weight: 700; font-family: 'Inter', sans-serif;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.18s; text-decoration: none; min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
   }
-  #bot-fanalca-login .select2-container--default.select2-container--open .select2-selection--single,
-  #bot-fanalca-login .select2-container--default.select2-container--focus .select2-selection--single {
-    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); outline: none;
+  #bot-fanalca-login .btn:active { transform: scale(0.96); }
+  #bot-fanalca-login .btn-primary { background: var(--accent); color: #fff; }
+  #bot-fanalca-login .btn-primary:hover { background: var(--accent-deep); }
+  #bot-fanalca-login .btn-ghost {
+    background: var(--surface-2); border: 1.5px solid var(--border); color: var(--text-soft);
+  }
+  #bot-fanalca-login .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  #bot-fanalca-login .btn-save {
+    width: 100%; background: var(--accent); color: #fff;
+    padding: 16px; font-size: 0.95rem; border-radius: 16px;
+    margin-bottom: 14px; justify-content: center; border: none;
+    min-height: 54px; box-shadow: 0 8px 24px rgba(232,76,30,0.3);
+  }
+  #bot-fanalca-login .btn-save:hover { background: var(--accent-deep); }
+  #bot-fanalca-login .btn-save:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+  #bot-fanalca-login .btn-add {
+    background: var(--surface-2); border: 1.5px solid var(--border); color: var(--text);
+    white-space: nowrap;
+  }
+  #bot-fanalca-login .btn-add:hover { border-color: var(--accent); color: var(--accent); }
+  #bot-fanalca-login .btn-open,
+  #bot-fanalca-login .btn-copy {
+    background: var(--surface-2); border: 1.5px solid var(--border); color: var(--text);
+  }
+  #bot-fanalca-login .btn-open:hover { border-color: var(--success); color: var(--success); }
+  #bot-fanalca-login .btn-copy:hover  { border-color: var(--accent); color: var(--accent); }
+  #bot-fanalca-login .btn-edit-sm {
+    background: rgba(232,76,30,0.1); border: 1.5px solid rgba(232,76,30,0.2); color: var(--accent);
+    font-size: 0.75rem; padding: 8px 16px; border-radius: 10px;
+    font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.18s;
+  }
+  #bot-fanalca-login .btn-edit-sm:hover { background: var(--accent); color: #fff; }
+  #bot-fanalca-login .btn-view-sm {
+    background: transparent; border: 1.5px solid var(--border); color: var(--text-soft);
+    font-size: 0.75rem; padding: 8px 16px; border-radius: 10px; font-weight: 600;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.18s;
+    text-decoration: none; display: inline-flex; align-items: center;
+  }
+  #bot-fanalca-login .btn-view-sm:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SPINNER / LOADING
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .spinner {
+    display: none; width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+    border-radius: 50%; animation: fl-spin 0.7s linear infinite;
+  }
+  #bot-fanalca-login .sp-accent {
+    display: inline-block; width: 18px; height: 18px;
+    border: 2px solid rgba(232,76,30,0.2); border-top-color: var(--accent);
+    border-radius: 50%; animation: fl-spin 0.7s linear infinite;
+    vertical-align: middle; margin-right: 8px;
+  }
+  @keyframes fl-spin { to { transform: rotate(360deg); } }
+  #bot-fanalca-login .ped-loading {
+    text-align: center; padding: 48px 24px;
+    color: var(--text-soft); font-size: 0.85rem;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     BADGES
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .badge {
+    display: inline-block; font-size: 0.65rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px; letter-spacing: 0.04em;
+    line-height: 1.6; vertical-align: middle;
+  }
+  #bot-fanalca-login .badge-Ready { background: rgba(52,211,153,0.13); color: #34d399; border: 1px solid rgba(52,211,153,0.25); }
+  #bot-fanalca-login .badge-Draft { background: rgba(251,191,36,0.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+  #bot-fanalca-login .badge-Sent  { background: rgba(96,165,250,0.1);  color: #60a5fa; border: 1px solid rgba(96,165,250,0.2); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PRODUCTS
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .prod-list { display: flex; flex-direction: column; gap: 8px; }
+  #bot-fanalca-login .prod-row {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px;
+  }
+  #bot-fanalca-login .prod-info { flex: 1; min-width: 0; }
+  #bot-fanalca-login .prod-name {
+    font-size: 0.84rem; font-weight: 600; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #bot-fanalca-login .prod-sku  { font-size: 0.68rem; color: var(--text-soft); margin-top: 2px; }
+  #bot-fanalca-login .prod-qty  {
+    width: 60px; background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 8px; text-align: center; color: var(--text);
+    font-size: 0.9rem; font-family: 'Inter', sans-serif; min-height: 40px;
+  }
+  #bot-fanalca-login .prod-remove {
+    background: transparent; border: none; color: var(--text-soft);
+    cursor: pointer; font-size: 1.1rem; padding: 6px; transition: color 0.18s;
+    min-width: 32px; display: flex; align-items: center; justify-content: center;
+  }
+  #bot-fanalca-login .prod-remove:hover { color: var(--danger); }
+  #bot-fanalca-login .prod-empty {
+    color: var(--text-soft); font-size: 0.82rem; text-align: center; padding: 20px 0;
+  }
+  #bot-fanalca-login .add-row { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+  #bot-fanalca-login .s2-wrap { flex: 1; min-width: 160px; }
+  #bot-fanalca-login .add-qty {
+    width: 70px; background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--border); border-radius: 14px;
+    padding: 13px 8px; text-align: center; color: var(--text);
+    font-size: 0.9rem; font-family: 'Inter', sans-serif; min-height: 48px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     EDITOR PROP HEAD
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .prop-head {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 18px; margin-bottom: 14px;
+  }
+  #bot-fanalca-login .prop-head-title {
+    font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.3;
+  }
+  #bot-fanalca-login .prop-head-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.75rem; color: var(--text-soft); flex-wrap: wrap;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SAVE SUCCESS
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .save-success {
+    background: rgba(52,211,153,0.06); border: 1.5px solid rgba(52,211,153,0.2);
+    border-radius: 20px; padding: 18px; margin-bottom: 14px; display: none;
+  }
+  #bot-fanalca-login .ss-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  #bot-fanalca-login .ss-icon {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: rgba(52,211,153,0.15); color: var(--success);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.1rem; flex-shrink: 0;
+  }
+  #bot-fanalca-login .ss-title { font-weight: 700; color: var(--success); font-size: 0.9rem; }
+  #bot-fanalca-login .ss-sub   { font-size: 0.75rem; color: var(--text-soft); margin-top: 3px; }
+  #bot-fanalca-login .ss-url   {
+    font-size: 0.72rem; color: var(--text-soft); margin-bottom: 14px;
+    word-break: break-all; line-height: 1.5;
+    background: rgba(255,255,255,0.03); border-radius: 10px;
+    padding: 10px 12px; border: 1px solid var(--border);
+  }
+  #bot-fanalca-login .ss-url a { color: var(--accent); }
+  #bot-fanalca-login .ss-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  #bot-fanalca-login .ss-actions .btn { flex: 1; justify-content: center; }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SELECT2 THEME
+  ═══════════════════════════════════════════════════════════════ */
+  #bot-fanalca-login .select2-container--default .select2-selection--single {
+    background: rgba(255,255,255,0.05) !important; border-color: var(--border) !important;
+    border-width: 1.5px !important; border-radius: 14px !important; height: 48px !important;
   }
   #bot-fanalca-login .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: var(--text); line-height: 42px; padding-left: 14px; font-size: 0.875rem; font-family: 'Inter', sans-serif;
+    color: var(--text) !important; line-height: 48px !important; padding: 0 16px !important;
+    font-size: 0.9rem !important;
   }
-  #bot-fanalca-login .select2-container--default .select2-selection--single .select2-selection__placeholder { color: var(--text-soft); }
-  #bot-fanalca-login .select2-container--default .select2-selection--single .select2-selection__arrow b { border-top-color: var(--text-soft); }
+  #bot-fanalca-login .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 48px !important; right: 8px !important;
+  }
   #bot-fanalca-login .select2-dropdown {
-    background: #10101c; border: 1px solid var(--border); border-radius: 10px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.65); font-family: 'Inter', sans-serif; font-size: 0.875rem; overflow: hidden;
+    background: #131320 !important; border-color: var(--border) !important;
+    border-radius: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.8) !important;
+    overflow: hidden !important;
   }
-  #bot-fanalca-login .select2-results__option { color: var(--text); padding: 9px 14px; }
-  #bot-fanalca-login .select2-results__option:hover { background: rgba(255,255,255,0.05); }
-  #bot-fanalca-login .select2-container--default .select2-results__option--highlighted[aria-selected] { background: var(--accent); color: #fff; }
-  #bot-fanalca-login .select2-results__group { color: var(--text-soft); font-size: 0.65rem; font-weight: 700; padding: 9px 14px 5px; letter-spacing: 1px; text-transform: uppercase; }
+  #bot-fanalca-login .select2-container--default .select2-results__option--highlighted { background: var(--accent) !important; }
+  #bot-fanalca-login .select2-results__option { color: var(--text) !important; font-size: 0.9rem !important; padding: 10px 14px !important; }
   #bot-fanalca-login .select2-search__field {
-    background: rgba(255,255,255,0.04) !important; color: var(--text) !important;
-    border: 1px solid var(--border) !important; border-radius: 7px !important;
-    padding: 7px 11px !important; font-family: 'Inter', sans-serif !important; font-size: 0.875rem !important;
+    background: rgba(255,255,255,0.05) !important; color: var(--text) !important;
+    border-color: var(--border) !important; border-radius: 10px !important;
+    padding: 8px 12px !important; font-size: 0.9rem !important;
   }
+  #bot-fanalca-login .select2-results__group { color: var(--text-soft) !important; font-size: 0.7rem !important; }
 
-  /* ── Native select ───────────────────────────────────────────── */
-  #bot-fanalca-login .nat-select {
-    width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 10px; padding: 11px 36px 11px 14px; font-size: 0.875rem;
-    font-family: 'Inter', sans-serif; color: var(--text); outline: none; cursor: pointer;
-    appearance: none; transition: all 0.2s;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6478' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 14px center;
-  }
-  #bot-fanalca-login .nat-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-  #bot-fanalca-login .nat-select option { background: #10101c; }
-
-  /* ── Proposal preview ───────────────────────────────────────── */
-  #bot-fanalca-login .prop-preview {
-    background: rgba(232,76,30,0.05); border: 1px solid rgba(232,76,30,0.15);
-    border-radius: 10px; padding: 14px 16px; margin-top: 12px; display: none;
-  }
-  #bot-fanalca-login .prop-preview-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 5px; }
-  #bot-fanalca-login .prop-preview-meta { font-size: 0.72rem; color: var(--text-soft); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-
-  /* ── Products ───────────────────────────────────────────────── */
-  #bot-fanalca-login .prod-list { display: flex; flex-direction: column; gap: 6px; }
-  #bot-fanalca-login .prod-row {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 10px 14px; transition: border-color 0.15s;
-  }
-  #bot-fanalca-login .prod-row:hover { border-color: rgba(255,255,255,0.13); }
-  #bot-fanalca-login .prod-info { flex: 1; min-width: 0; }
-  #bot-fanalca-login .prod-name { font-size: 0.84rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #bot-fanalca-login .prod-sku  { font-size: 0.66rem; color: var(--text-soft); font-family: monospace; margin-top: 2px; }
-  #bot-fanalca-login .prod-qty {
-    width: 58px; background: var(--surface); border: 1px solid var(--border);
-    border-radius: 7px; padding: 5px 8px; font-size: 0.84rem; color: var(--text);
-    text-align: center; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
-  }
-  #bot-fanalca-login .prod-qty:focus { border-color: var(--accent); }
-  #bot-fanalca-login .prod-remove {
-    background: none; border: 1px solid rgba(248,113,113,0.25); color: var(--danger);
-    border-radius: 7px; padding: 5px 10px; font-size: 0.72rem; cursor: pointer;
-    font-family: 'Inter', sans-serif; transition: all 0.15s; flex-shrink: 0;
-  }
-  #bot-fanalca-login .prod-remove:hover { background: rgba(248,113,113,0.08); border-color: var(--danger); }
-  #bot-fanalca-login .prod-empty { text-align: center; padding: 24px 16px; color: var(--text-soft); font-size: 0.79rem; line-height: 1.6; }
-
-  /* ── Add product ─────────────────────────────────────────────── */
-  #bot-fanalca-login .add-row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
-  #bot-fanalca-login .add-row .s2-wrap { flex: 1; min-width: 180px; }
-  #bot-fanalca-login .add-qty {
-    width: 70px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 10px; padding: 11px 8px; font-size: 0.875rem; color: var(--text);
-    text-align: center; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
-  }
-  #bot-fanalca-login .add-qty:focus { border-color: var(--accent); }
-
-  /* ── Proposal head ───────────────────────────────────────────── */
-  #bot-fanalca-login .prop-head { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
-  #bot-fanalca-login .prop-head-title { font-size: 1rem; font-weight: 700; margin-bottom: 7px; line-height: 1.35; }
-  #bot-fanalca-login .prop-head-meta { font-size: 0.72rem; color: var(--text-soft); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-  /* ── Buttons ─────────────────────────────────────────────────── */
-  #bot-fanalca-login .btn {
-    padding: 11px 20px; border-radius: 10px; font-size: 0.84rem; font-weight: 600;
-    font-family: 'Inter', sans-serif; cursor: pointer; border: none;
-    transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  #bot-fanalca-login .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-  #bot-fanalca-login .btn-primary { background: var(--accent); color: #fff; width: 100%; margin-top: 14px; }
-  #bot-fanalca-login .btn-primary:hover { background: var(--accent-deep); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(232,76,30,0.3); }
-  #bot-fanalca-login .btn-save { width: 100%; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; margin-top: 4px; box-shadow: 0 2px 14px rgba(34,197,94,0.18); }
-  #bot-fanalca-login .btn-save:hover { filter: brightness(1.07); transform: translateY(-1px); }
-  #bot-fanalca-login .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-soft); font-size: 0.78rem; padding: 7px 14px; }
-  #bot-fanalca-login .btn-ghost:hover { border-color: rgba(255,255,255,0.18); color: var(--text); }
-  #bot-fanalca-login .btn-add { background: var(--accent-glow); border: 1px solid rgba(232,76,30,0.28); color: var(--accent); padding: 11px 16px; white-space: nowrap; }
-  #bot-fanalca-login .btn-add:hover { background: rgba(232,76,30,0.2); }
-  #bot-fanalca-login .btn-open { background: var(--accent); color: #fff; flex: 1; }
-  #bot-fanalca-login .btn-open:hover { background: var(--accent-deep); }
-  #bot-fanalca-login .btn-copy { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-soft); }
-  #bot-fanalca-login .btn-copy:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
-
-  /* ── Spinner ─────────────────────────────────────────────────── */
-  #bot-fanalca-login .spinner { width: 14px; height: 14px; border: 1.8px solid rgba(255,255,255,0.22); border-top-color: #fff; border-radius: 50%; animation: fl-spin 0.65s linear infinite; display: none; flex-shrink: 0; }
-  #bot-fanalca-login .sp-accent { width: 14px; height: 14px; border: 1.8px solid var(--accent-glow); border-top-color: var(--accent); border-radius: 50%; animation: fl-spin 0.65s linear infinite; }
-  @keyframes fl-spin { to { transform: rotate(360deg); } }
-
-  /* ── Badge ───────────────────────────────────────────────────── */
-  #bot-fanalca-login .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-  #bot-fanalca-login .badge-Ready { background: rgba(52,211,153,0.12); color: #34d399; }
-  #bot-fanalca-login .badge-Draft { background: rgba(251,191,36,0.12);  color: #fbbf24; }
-  #bot-fanalca-login .badge-Sent  { background: rgba(232,76,30,0.12);   color: #e84c1e; }
-
-  /* ── Row meta ────────────────────────────────────────────────── */
-  #bot-fanalca-login .row-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  #bot-fanalca-login .meta-count { font-size: 0.72rem; color: var(--text-soft); }
-
-  /* ── Loading ─────────────────────────────────────────────────── */
-  #bot-fanalca-login .ped-loading { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--text-soft); font-size: 0.79rem; justify-content: center; }
-
-  /* ── Save success ────────────────────────────────────────────── */
-  #bot-fanalca-login .save-success { display: none; background: rgba(52,211,153,0.05); border: 1px solid rgba(52,211,153,0.18); border-radius: 14px; padding: 20px; margin-top: 10px; }
-  #bot-fanalca-login .ss-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  #bot-fanalca-login .ss-icon { width: 32px; height: 32px; border-radius: 50%; background: rgba(52,211,153,0.12); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-  #bot-fanalca-login .ss-title { font-weight: 700; font-size: 0.88rem; color: #34d399; }
-  #bot-fanalca-login .ss-sub   { font-size: 0.72rem; color: var(--text-soft); margin-top: 2px; }
-  #bot-fanalca-login .ss-url { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 9px; padding: 9px 13px; margin-bottom: 12px; font-size: 0.72rem; word-break: break-all; line-height: 1.5; }
-  #bot-fanalca-login .ss-url a { color: var(--accent); text-decoration: none; font-weight: 500; }
-  #bot-fanalca-login .ss-url a:hover { text-decoration: underline; }
-  #bot-fanalca-login .ss-actions { display: flex; gap: 8px; }
-
-  /* ── Toast ───────────────────────────────────────────────────── */
+  /* ═══════════════════════════════════════════════════════════════
+     TOAST
+  ═══════════════════════════════════════════════════════════════ */
   #bot-fanalca-login .fl-toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
-    background: #12121e; border: 1px solid var(--border); border-radius: 12px;
-    padding: 11px 18px; font-size: 0.79rem; color: var(--text);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.55); display: none; max-width: 280px;
-    font-family: 'Inter', sans-serif;
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; background: #1a1a2e; border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 20px; font-size: 0.82rem; color: var(--text);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6); display: none;
+    font-family: 'Inter', sans-serif; white-space: nowrap; font-weight: 500;
   }
-  #bot-fanalca-login .fl-toast.ok  { border-color: rgba(52,211,153,0.4); }
-  #bot-fanalca-login .fl-toast.err { border-color: rgba(248,113,113,0.4); }
-
-  @media (max-width: 600px) {
-    #bot-fanalca-login .app-body { padding: 24px 16px; }
-    #bot-fanalca-login .app-header { padding: 12px 16px; }
-    #bot-fanalca-login .add-row .s2-wrap { width: 100%; }
-    #bot-fanalca-login .ss-actions { flex-direction: column; }
-  }
+  #bot-fanalca-login .fl-toast.ok  { border-color: rgba(52,211,153,0.4); color: var(--success); }
+  #bot-fanalca-login .fl-toast.err { border-color: rgba(248,113,113,0.4); color: var(--danger); }
 </style>
 
 <!-- HTML -->
 <div id="bot-fanalca-login">
 
-  <!-- ══════════════ VIEW: LOGIN ══════════════ -->
+  <!-- ══════════════════ VIEW: LOGIN ══════════════════ -->
   <div class="view active" id="view-login">
     <div class="login-wrap">
-      <div class="login-card">
-        <div class="login-logo">
-          <span class="login-logo-text">Fanalca</span>
-          <span class="login-logo-dot"></span>
-        </div>
-        <h2 class="login-title">Bienvenido</h2>
-        <p class="login-sub">Ingresa tus credenciales para continuar</p>
 
+      <div class="login-brand">
+        <div class="login-brand-icon">🚗</div>
+        <div class="login-brand-name">Fanalca</div>
+        <div class="login-brand-sub">Portal de propuestas</div>
+      </div>
+
+      <div class="login-card">
+        <div class="login-title">Iniciar sesión</div>
         <div class="login-err" id="login-err"></div>
 
         <div class="field">
           <label for="login-email">Usuario</label>
-          <input type="text" id="login-email" placeholder="usuario@dominio.com" autocomplete="username">
+          <input type="text" id="login-email" placeholder="tu@email.com" autocomplete="username">
         </div>
         <div class="field">
           <label for="login-password">Contraseña</label>
@@ -348,145 +546,238 @@
           <span class="spinner" id="sp-login"></span>
         </button>
       </div>
+
     </div>
   </div>
 
-  <!-- ══════════════ VIEW: APP ══════════════ -->
-  <div class="view" id="view-app">
+  <!-- ══════════════════ APP HEADER ══════════════════ -->
+  <div class="app-header" id="fl-app-header" style="display:none">
+    <div class="app-header-left">
+      <button class="btn-icon" id="fl-btn-back" onclick="flGoHome()" style="display:none" title="Inicio">←</button>
+      <span class="header-page" id="fl-header-page">Inicio</span>
+    </div>
+    <div class="app-header-right">
+      <span class="user-chip" id="header-user-name">—</span>
+    </div>
+  </div>
 
-    <!-- Header -->
-    <div class="app-header">
-      <div class="app-header-brand">
-        <span></span> Fanalca — Editor de propuestas
-      </div>
-      <div class="app-header-user">
-        <span class="user-pill" id="header-user-name">—</span>
-        <button class="btn-logout" onclick="flDoLogout()">Cerrar sesión</button>
+  <!-- ══════════════════ VIEW: HOME ══════════════════ -->
+  <div class="view" id="view-home">
+    <div class="home-wrap">
+      <div class="home-greeting">Hola,<br><em id="home-user-name">—</em></div>
+      <div class="home-sub">¿Qué quieres hacer hoy?</div>
+
+      <div class="home-section-title">Acciones rápidas</div>
+      <div class="home-cards">
+
+        <div class="home-card" onclick="flGoMyProposals()">
+          <div class="hc-icon-wrap blue">📋</div>
+          <div class="hc-body">
+            <div class="hc-title">Ver propuestas</div>
+            <div class="hc-desc">Revisa el estado de tus propuestas</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+
+        <div class="home-card" onclick="flGoCreate()">
+          <div class="hc-icon-wrap green">✨</div>
+          <div class="hc-body">
+            <div class="hc-title">Crear propuesta</div>
+            <div class="hc-desc">Genera una nueva propuesta</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+
+        <div class="home-card" onclick="flGoSearch()">
+          <div class="hc-icon-wrap orange">✏️</div>
+          <div class="hc-body">
+            <div class="hc-title">Editar propuesta</div>
+            <div class="hc-desc">Busca y edita por asesor</div>
+          </div>
+          <div class="hc-arrow">›</div>
+        </div>
+
       </div>
     </div>
+  </div>
 
-    <!-- Contenido del editor -->
-    <div class="app-body">
-      <div class="ped-wrap">
+  <!-- ══════════════════ VIEW: MIS PROPUESTAS ══════════════════ -->
+  <div class="view" id="view-my-proposals">
+    <div class="view-scroll">
+      <div class="view-title">Mis propuestas</div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-status="all"   onclick="flFilterMy('all',   this)">Todas</button>
+        <button class="filter-btn"        data-status="Ready" onclick="flFilterMy('Ready', this)">Ready</button>
+        <button class="filter-btn"        data-status="Draft" onclick="flFilterMy('Draft', this)">Draft</button>
+        <button class="filter-btn"        data-status="Sent"  onclick="flFilterMy('Sent',  this)">Sent</button>
+      </div>
+      <div id="fl-my-list">
+        <div class="ped-loading"><div class="sp-accent"></div> Cargando...</div>
+      </div>
+    </div>
+  </div>
 
-        <h2 class="ped-title">Editor de propuestas</h2>
-        <p class="ped-subtitle">Actualiza estado y productos de las propuestas por asesor</p>
+  <!-- ══════════════════ VIEW: CREAR ══════════════════ -->
+  <div class="view" id="view-create">
+    <div class="view-scroll">
+      <div class="view-title">Crear propuesta</div>
 
-        <!-- Steps -->
-        <div class="ped-steps">
-          <div class="step-node s-active" id="fl-si-1">
-            <div class="sdot active" id="fl-sdot-1"><span class="snum">1</span></div>
-            <div class="slabel">Asesor</div>
+      <div class="ped-card">
+        <div class="card-sec">Datos</div>
+        <div class="field">
+          <label>Título</label>
+          <input type="text" id="fl-create-title" class="nat-input" placeholder="Ej: Propuesta comercial Fanalca">
+        </div>
+        <div class="field" style="margin-top:10px">
+          <label>Estado inicial</label>
+          <select id="fl-create-status" class="nat-select">
+            <option value="Draft">Draft — Borrador</option>
+            <option value="Ready">Ready — Lista para enviar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="ped-card">
+        <div class="card-sec">Productos</div>
+        <div id="fl-create-products"><div class="prod-empty">Sin productos aún.</div></div>
+      </div>
+
+      <div class="ped-card">
+        <div class="card-sec">Agregar producto</div>
+        <div class="add-row">
+          <div class="s2-wrap">
+            <select id="fl-create-add-prod"><option value="">Buscar en catálogo...</option></select>
           </div>
-          <div class="step-line" id="fl-sl-12"></div>
-          <div class="step-node" id="fl-si-2">
-            <div class="sdot" id="fl-sdot-2"><span class="snum">2</span></div>
-            <div class="slabel">Propuesta</div>
-          </div>
-          <div class="step-line" id="fl-sl-23"></div>
-          <div class="step-node" id="fl-si-3">
-            <div class="sdot" id="fl-sdot-3"><span class="snum">3</span></div>
-            <div class="slabel">Editar</div>
+          <input type="number" class="add-qty" id="fl-create-add-qty" value="1" min="1" max="999" placeholder="Cant.">
+          <button class="btn btn-add" onclick="flCreateAddProduct()">+ Agregar</button>
+        </div>
+      </div>
+
+      <button class="btn btn-save" id="fl-btn-create" onclick="flCreateProposal()">
+        <span id="fl-btn-create-text">Crear propuesta</span>
+        <span class="spinner" id="fl-sp-create"></span>
+      </button>
+
+      <div class="save-success" id="fl-create-success">
+        <div class="ss-head">
+          <div class="ss-icon">✓</div>
+          <div>
+            <div class="ss-title">Propuesta creada</div>
+            <div class="ss-sub" id="fl-create-sub"></div>
           </div>
         </div>
+        <div class="ss-url"><a id="fl-create-url" href="#" target="_blank" rel="noopener"></a></div>
+        <div class="ss-actions">
+          <button class="btn btn-open" id="fl-create-open-btn">Abrir →</button>
+          <button class="btn btn-ghost" onclick="flGoHome()">Inicio</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Step 1: Asesor -->
-        <div id="fl-step-1">
-          <div class="ped-card">
-            <div class="card-sec">Asesor</div>
-            <label class="flabel">Selecciona el asesor</label>
-            <select id="fl-agent-select"><option value="">Cargando asesores...</option></select>
-            <button class="btn btn-primary" id="fl-btn-load" onclick="flLoadProposals()" disabled>
-              Ver propuestas <span class="spinner" id="fl-sp-load"></span>
-            </button>
+  <!-- ══════════════════ VIEW: BUSCAR Y EDITAR ══════════════════ -->
+  <div class="view" id="view-search">
+    <div class="view-scroll">
+      <div class="view-title">Editar propuesta</div>
+
+      <div class="ped-card">
+        <div class="card-sec">Asesor</div>
+        <label class="flabel">Selecciona el asesor</label>
+        <select id="fl-agent-select"><option value="">Cargando asesores...</option></select>
+        <button class="btn btn-primary" id="fl-btn-load" onclick="flLoadSearchProposals()" disabled style="margin-top:14px; width:100%; justify-content:center">
+          Ver propuestas <span class="spinner" id="fl-sp-load"></span>
+        </button>
+      </div>
+
+      <div id="fl-search-list" style="display:none">
+        <div class="filter-bar">
+          <button class="filter-btn active" data-status="all"   onclick="flFilterSearch('all',   this)">Todas</button>
+          <button class="filter-btn"        data-status="Ready" onclick="flFilterSearch('Ready', this)">Ready</button>
+          <button class="filter-btn"        data-status="Draft" onclick="flFilterSearch('Draft', this)">Draft</button>
+          <button class="filter-btn"        data-status="Sent"  onclick="flFilterSearch('Sent',  this)">Sent</button>
+        </div>
+        <div id="fl-search-proposals"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ VIEW: EDITOR ══════════════════ -->
+  <div class="view" id="view-editor">
+    <div class="view-scroll">
+
+      <div class="prop-head">
+        <div class="prop-head-title" id="fl-ed-title">—</div>
+        <div class="prop-head-meta">
+          <span id="fl-ed-num"></span>
+          <span id="fl-ed-badge"></span>
+        </div>
+      </div>
+
+      <div class="ped-card">
+        <div class="card-sec">Estado</div>
+        <select class="nat-select" id="fl-ed-status">
+          <option value="Draft">Draft — Borrador</option>
+          <option value="Ready">Ready — Lista para enviar</option>
+          <option value="Sent">Sent — Enviada</option>
+        </select>
+      </div>
+
+      <div class="ped-card">
+        <div class="card-sec">Productos</div>
+        <div id="fl-ed-products">
+          <div class="ped-loading"><div class="sp-accent"></div> Cargando...</div>
+        </div>
+      </div>
+
+      <div class="ped-card">
+        <div class="card-sec">Agregar producto</div>
+        <div class="add-row">
+          <div class="s2-wrap">
+            <select id="fl-add-prod"><option value="">Buscar en catálogo...</option></select>
+          </div>
+          <input type="number" class="add-qty" id="fl-add-qty" value="1" min="1" max="999" placeholder="Cant.">
+          <button class="btn btn-add" onclick="flAddProduct()">+ Agregar</button>
+        </div>
+      </div>
+
+      <button class="btn btn-save" id="fl-btn-save" onclick="flSaveProposal()">
+        <span id="fl-btn-save-text">Guardar cambios</span>
+        <span class="spinner" id="fl-sp-save"></span>
+      </button>
+
+      <div class="save-success" id="fl-save-success">
+        <div class="ss-head">
+          <div class="ss-icon">✓</div>
+          <div>
+            <div class="ss-title">Guardado correctamente</div>
+            <div class="ss-sub" id="fl-ss-sub"></div>
           </div>
         </div>
-
-        <!-- Step 2: Propuesta -->
-        <div id="fl-step-2" style="display:none">
-          <div class="ped-card">
-            <div class="row-meta">
-              <button class="btn btn-ghost" onclick="flGoStep(1)">← Volver</button>
-              <span class="meta-count" id="fl-proposals-count"></span>
-            </div>
-            <div class="card-sec">Propuesta</div>
-            <label class="flabel">Selecciona la propuesta a editar</label>
-            <select id="fl-proposal-select"><option value="">—</option></select>
-            <div class="prop-preview" id="fl-prop-preview">
-              <div class="prop-preview-title" id="fl-prev-title"></div>
-              <div class="prop-preview-meta" id="fl-prev-meta"></div>
-            </div>
-            <button class="btn btn-primary" id="fl-btn-open" onclick="flLoadDetail()" disabled>
-              Editar propuesta <span class="spinner" id="fl-sp-detail"></span>
-            </button>
-          </div>
+        <div class="ss-url"><a id="fl-prop-url" href="#" target="_blank" rel="noopener"></a></div>
+        <div class="ss-actions">
+          <button class="btn btn-open" onclick="flOpenUrl()">Abrir →</button>
+          <button class="btn btn-copy" id="fl-btn-copy" onclick="flCopyUrl()">Copiar enlace</button>
         </div>
+      </div>
 
-        <!-- Step 3: Editor -->
-        <div id="fl-step-3" style="display:none">
+    </div>
+  </div>
 
-          <div class="ped-card">
-            <div class="row-meta" style="margin-bottom:0">
-              <button class="btn btn-ghost" onclick="flGoStep(2)">← Volver</button>
-            </div>
-            <div class="prop-head">
-              <div class="prop-head-title" id="fl-ed-title">—</div>
-              <div class="prop-head-meta">
-                <span id="fl-ed-num"></span>
-                <span id="fl-ed-badge"></span>
-              </div>
-            </div>
-            <div class="card-sec">Estado</div>
-            <select class="nat-select" id="fl-ed-status">
-              <option value="Draft">Draft — Borrador</option>
-              <option value="Ready">Ready — Lista para enviar</option>
-              <option value="Sent">Sent — Enviada</option>
-            </select>
-          </div>
-
-          <div class="ped-card">
-            <div class="card-sec">Productos</div>
-            <div id="fl-ed-products">
-              <div class="ped-loading"><div class="sp-accent"></div> Cargando productos...</div>
-            </div>
-          </div>
-
-          <div class="ped-card">
-            <div class="card-sec">Agregar producto</div>
-            <div class="add-row">
-              <div class="s2-wrap">
-                <select id="fl-add-prod"><option value="">Buscar en catálogo...</option></select>
-              </div>
-              <input type="number" class="add-qty" id="fl-add-qty" value="1" min="1" max="999" placeholder="Cant.">
-              <button class="btn btn-add" onclick="flAddProduct()">+ Agregar</button>
-            </div>
-          </div>
-
-          <button class="btn btn-save" id="fl-btn-save" onclick="flSaveProposal()">
-            <span id="fl-btn-save-text">Guardar cambios</span>
-            <span class="spinner" id="fl-sp-save"></span>
-          </button>
-
-          <!-- Panel de éxito -->
-          <div class="save-success" id="fl-save-success">
-            <div class="ss-head">
-              <div class="ss-icon">✓</div>
-              <div>
-                <div class="ss-title">Guardado correctamente</div>
-                <div class="ss-sub" id="fl-ss-sub"></div>
-              </div>
-            </div>
-            <div class="ss-url"><a id="fl-prop-url" href="#" target="_blank" rel="noopener"></a></div>
-            <div class="ss-actions">
-              <button class="btn btn-open" onclick="flOpenUrl()">Abrir propuesta →</button>
-              <button class="btn btn-copy" id="fl-btn-copy" onclick="flCopyUrl()">Copiar enlace</button>
-            </div>
-          </div>
-
-        </div><!-- /fl-step-3 -->
-      </div><!-- /ped-wrap -->
-    </div><!-- /app-body -->
-  </div><!-- /view-app -->
+  <!-- ══════════════════ BOTTOM NAV ══════════════════ -->
+  <div class="bottom-nav" id="fl-bottom-nav">
+    <button class="nav-tab" id="nav-tab-my"     onclick="flGoMyProposals()">
+      <span class="nav-tab-icon">📋</span>
+      <span class="nav-tab-label">Propuestas</span>
+    </button>
+    <button class="nav-tab" id="nav-tab-create" onclick="flGoCreate()">
+      <span class="nav-tab-icon">✨</span>
+      <span class="nav-tab-label">Crear</span>
+    </button>
+    <button class="nav-tab" id="nav-tab-search" onclick="flGoSearch()">
+      <span class="nav-tab-icon">✏️</span>
+      <span class="nav-tab-label">Editar</span>
+    </button>
+  </div>
 
 </div><!-- /bot-fanalca-login -->
 
@@ -500,40 +791,123 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-  // ── Config ───────────────────────────────────────────────────
+  // ── Config ───────────────────────────────────────────────────────
   var domain      = 'customer-design.prolibu.com';
   var rolesString = 'agent';
-  var apiKey      = '56a69869-bf0a-4650-98e9-fcd9680b31d5'; // accessToken requerido en el body del login
+  var apiKey      = '56a69869-bf0a-4650-98e9-fcd9680b31d5';
 
-  // ── Estado de sesión ─────────────────────────────────────────
+  // ── Sesión ───────────────────────────────────────────────────────
   var flToken       = '';
   var flAuthHeaders = {};
   var flCurrentUser = null;
   var flNodriza     = null;
 
-  // ── Estado del editor ────────────────────────────────────────
-  var flAgentsList      = [];
-  var flProposalsList   = [];
-  var flProductsCatalog = [];
-  var flCurrentProposal = null;
-  var flCurrentProducts = [];
-  var flPropUrl         = '';
+  // ── Datos ────────────────────────────────────────────────────────
+  var flAgentsList          = [];
+  var flMyProposalsList     = [];
+  var flSearchProposalsList = [];
+  var flProductsCatalog     = [];
+  var flCurrentProposal     = null;
+  var flCurrentProducts     = [];
+  var flCreateProducts      = [];
+  var flPropUrl             = '';
+  var flCreatePropUrl       = '';
 
-  // ── Utilidades ───────────────────────────────────────────────
+  // ── Utilidades ───────────────────────────────────────────────────
   function flToast(msg, type) {
     var $t = $('#fl-toast');
     $t.text(msg).removeClass('ok err').addClass(type === 'ok' ? 'ok' : 'err').fadeIn(200);
-    setTimeout(function () { $t.fadeOut(400); }, 3200);
+    setTimeout(function () { $t.fadeOut(400); }, 3000);
   }
 
-  function flBadge(s) { return '<span class="badge badge-' + s + '">' + s + '</span>'; }
+  function flBadge(s) {
+    var valid = ['Ready', 'Draft', 'Sent'];
+    var cls = valid.indexOf(s) >= 0 ? s : 'Draft';
+    return '<span class="badge badge-' + cls + '">' + s + '</span>';
+  }
 
-  function flShowView(id) {
+  // ── Navegación ───────────────────────────────────────────────────
+  var FL_TAB_MAP = {
+    'view-my-proposals': 'nav-tab-my',
+    'view-create':       'nav-tab-create',
+    'view-search':       'nav-tab-search'
+  };
+
+  function flShowView(id, title) {
     $('.view').removeClass('active').hide();
     $('#' + id).addClass('active').show();
+
+    if (id === 'view-login') {
+      $('#fl-app-header').hide();
+      $('#fl-bottom-nav').removeClass('visible');
+    } else {
+      $('#fl-app-header').css('display', 'flex');
+      $('#fl-header-page').text(title || '');
+
+      // Botón atrás: oculto en home, visible en editor, oculto en tabs
+      if (id === 'view-home' || id === 'view-my-proposals' || id === 'view-create' || id === 'view-search') {
+        $('#fl-btn-back').hide();
+      } else {
+        $('#fl-btn-back').show();
+      }
+
+      // Bottom nav: visible en tabs, oculto en home y editor
+      if (id === 'view-home' || id === 'view-editor') {
+        $('#fl-bottom-nav').removeClass('visible');
+      } else {
+        $('#fl-bottom-nav').addClass('visible');
+      }
+
+      // Marcar tab activo
+      $('.nav-tab').removeClass('active');
+      var tabId = FL_TAB_MAP[id];
+      if (tabId) $('#' + tabId).addClass('active');
+    }
   }
 
-  // ── LOGIN ────────────────────────────────────────────────────
+  function flGoHome() {
+    flShowView('view-home', 'Inicio');
+  }
+
+  function flGoMyProposals() {
+    flShowView('view-my-proposals', 'Mis propuestas');
+    flLoadMyProposals();
+  }
+
+  function flGoCreate() {
+    flShowView('view-create', 'Crear propuesta');
+    flCreateProducts = [];
+    flRenderCreateProducts();
+    $('#fl-create-title').val('');
+    $('#fl-create-status').val('Draft');
+    $('#fl-create-success').hide();
+    if ($('#fl-create-add-prod').data('select2')) $('#fl-create-add-prod').select2('destroy');
+    var opts = '<option value="">Buscar en catálogo...</option>';
+    _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
+      opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
+    });
+    $('#fl-create-add-prod').html(opts).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+  }
+
+  function flGoSearch() {
+    flShowView('view-search', 'Editar propuesta');
+    $('#fl-search-list').hide();
+    if ($('#fl-agent-select').data('select2')) $('#fl-agent-select').select2('destroy');
+    var opts = '<option value="">Seleccione un asesor</option>';
+    flAgentsList.forEach(function (a) {
+      opts += '<option value="' + a.email + '">' + a.firstName + ' ' + a.lastName + '</option>';
+    });
+    $('#fl-agent-select').html(opts).select2({ width: '100%', placeholder: 'Seleccione un asesor' });
+    $('#fl-agent-select').on('change', function () {
+      $('#fl-btn-load').prop('disabled', !$(this).val());
+    });
+    if (flCurrentUser && flCurrentUser.email) {
+      var match = flAgentsList.find(function (a) { return a.email === flCurrentUser.email; });
+      if (match) $('#fl-agent-select').val(match.email).trigger('change');
+    }
+  }
+
+  // ── LOGIN ────────────────────────────────────────────────────────
   function flDoLogin() {
     var email    = $('#login-email').val().trim();
     var password = $('#login-password').val();
@@ -545,45 +919,38 @@
     $('#login-err').hide();
 
     var loginBody = { username: email, password: password, accessToken: apiKey };
-    console.log('[LOGIN] POST /v1/user/login — body:', loginBody);
+    console.log('[LOGIN] POST body:', loginBody);
 
     $.ajax({
       url: 'https://' + domain + '/v1/user/login',
-      type: 'POST',
-      contentType: 'application/json',
+      type: 'POST', contentType: 'application/json',
       data: JSON.stringify(loginBody),
       success: function (res) {
-        console.log('[LOGIN] ✅ Response completo:', JSON.stringify(res, null, 2));
-
-        // Extraer token — manejar distintos formatos de respuesta
-        var data = res.data || res;
-        flToken = data.token || data.accessToken || data.access_token || data.jwt || '';
+        console.log('[LOGIN] ✅ Response:', JSON.stringify(res, null, 2));
+        var data      = res.data || res;
+        flToken       = data.token || data.accessToken || data.access_token || data.jwt || '';
         flCurrentUser = data.user || data.userData || data.profile || { email: email, firstName: email.split('@')[0] };
-
-        console.log('[LOGIN] token extraído:', flToken);
-        console.log('[LOGIN] usuario:', flCurrentUser);
+        console.log('[LOGIN] token:', flToken);
 
         if (!flToken) {
-          flShowLoginErr('No se recibió token. Revisa la consola (F12).');
-          flResetLoginBtn();
-          return;
+          flShowLoginErr('No se recibió token. Revisa F12.');
+          flResetLoginBtn(); return;
         }
 
         flAuthHeaders = { Authorization: 'Bearer ' + flToken };
         flNodriza     = new Nodriza({ hostname: domain });
 
-        // Mostrar nombre del usuario en el header
         var name = flCurrentUser.firstName || flCurrentUser.name || flCurrentUser.email || email;
         $('#header-user-name').text(name);
+        $('#home-user-name').text(name);
 
-        // Cambiar vista
-        flShowView('view-app');
+        flShowView('view-home', 'Inicio');
         flResetLoginBtn();
-        flInitApp();
+        flLoadAgents();
+        flLoadCatalog();
       },
       error: function (e) {
-        console.error('[LOGIN] ❌ Status:', e.status, e.statusText);
-        console.error('[LOGIN] Response:', e.responseText);
+        console.error('[LOGIN] ❌', e.status, e.responseText);
         var msg = 'Error ' + e.status;
         try { var b = JSON.parse(e.responseText); msg = b.message || b.error || b.msg || msg; } catch (_) {}
         flShowLoginErr(msg);
@@ -592,52 +959,34 @@
     });
   }
 
-  function flShowLoginErr(msg) {
-    $('#login-err').text(msg).show();
-  }
-
+  function flShowLoginErr(msg) { $('#login-err').text(msg).show(); }
   function flResetLoginBtn() {
     $('#btn-login').prop('disabled', false);
     $('#btn-login-text').text('Ingresar');
     $('#sp-login').hide();
   }
 
-  // ── LOGOUT ───────────────────────────────────────────────────
-  function flDoLogout() {
-    flToken = ''; flAuthHeaders = {}; flCurrentUser = null; flNodriza = null;
-    flAgentsList = []; flProposalsList = []; flProductsCatalog = [];
-    flCurrentProposal = null; flCurrentProducts = []; flPropUrl = '';
-    $('#login-email').val(''); $('#login-password').val('');
-    $('#login-err').hide();
-    flShowView('view-login');
-    flGoStep(1);
-  }
-
-  // Enter key en el formulario de login
   $(document).on('keydown', '#login-email, #login-password', function (e) {
     if (e.key === 'Enter') flDoLogin();
   });
 
-  // ── INIT APP ─────────────────────────────────────────────────
-  function flInitApp() {
-    flGoStep(1);
-
-    if ($('#fl-agent-select').data('select2')) $('#fl-agent-select').select2('destroy');
-    $('#fl-agent-select').select2({ width: '100%', placeholder: 'Cargando asesores...' });
-    $('#fl-agent-select').on('change', function () {
-      $('#fl-btn-load').prop('disabled', !$(this).val());
-    });
-
-    flLoadAgents();
-    flLoadCatalog();
+  // ── LOGOUT ───────────────────────────────────────────────────────
+  function flDoLogout() {
+    flToken = ''; flAuthHeaders = {}; flCurrentUser = null; flNodriza = null;
+    flAgentsList = []; flMyProposalsList = []; flSearchProposalsList = [];
+    flProductsCatalog = []; flCurrentProposal = null;
+    flCurrentProducts = []; flCreateProducts = [];
+    $('#login-email').val(''); $('#login-password').val('');
+    $('#login-err').hide();
+    flShowView('view-login');
   }
 
-  // ── AJAX helper ──────────────────────────────────────────────
+  // ── AJAX HELPER ──────────────────────────────────────────────────
   function flApi(method, path, data, cb, cbErr) {
     var opts = {
       url: 'https://' + domain + path,
       type: method, headers: flAuthHeaders, success: cb,
-      error: cbErr || function (e) { console.error(method, path, e); }
+      error: cbErr || function (e) { console.error(method, path, e.status, e.responseText); }
     };
     if (method === 'PUT' || method === 'POST') {
       opts.data = JSON.stringify(data); opts.contentType = 'application/json';
@@ -645,144 +994,162 @@
     $.ajax(opts);
   }
 
-  // ── STEPS ────────────────────────────────────────────────────
-  function flGoStep(n) {
-    $('#fl-step-1, #fl-step-2, #fl-step-3').hide();
-    $('#fl-step-' + n).show();
-    if (n < 3) $('#fl-save-success').hide();
-
-    [1, 2, 3].forEach(function (i) {
-      $('#fl-sdot-' + i).removeClass('active done');
-      $('#fl-si-' + i).removeClass('s-active s-done');
-      if (i < n) { $('#fl-sdot-' + i).addClass('done'); $('#fl-si-' + i).addClass('s-done'); }
-      else if (i === n) { $('#fl-sdot-' + i).addClass('active'); $('#fl-si-' + i).addClass('s-active'); }
-    });
-    $('#fl-sl-12').toggleClass('done', n >= 2);
-    $('#fl-sl-23').toggleClass('done', n >= 3);
-  }
-
-  // ── AGENTES ──────────────────────────────────────────────────
+  // ── AGENTES ──────────────────────────────────────────────────────
   function flLoadAgents() {
     $.ajax({
       url: 'https://' + domain + '/v1/publicservices/getAgents',
-      type: 'GET',
-      data: { status: 'active', roles: [rolesString] },
+      type: 'GET', data: { status: 'active', roles: [rolesString] },
       success: function (res) {
         var list = Array.isArray(res) ? res : (res.results || []);
         flAgentsList = list.map(function (a) {
           return { email: a.email || '', firstName: a.firstName || '', lastName: a.lastName || '', id: a.id || a._id || '' };
         });
         console.log('Asesores:', flAgentsList.length);
-        var opts = '<option value="">Seleccione un asesor</option>';
-        flAgentsList.forEach(function (a) {
-          opts += '<option value="' + a.email + '">' + a.firstName + ' ' + a.lastName + '</option>';
-        });
-        $('#fl-agent-select').html(opts).trigger('change');
-
-        // Auto-seleccionar al usuario logueado si está en la lista
-        if (flCurrentUser && flCurrentUser.email) {
-          var match = flAgentsList.find(function (a) { return a.email === flCurrentUser.email; });
-          if (match) {
-            $('#fl-agent-select').val(match.email).trigger('change');
-            console.log('Asesor auto-seleccionado:', match.email);
-          }
-        }
       },
-      error: function (e) { console.error('loadAgents error:', e); flToast('Error cargando asesores', 'err'); }
+      error: function (e) { console.error('loadAgents:', e); }
     });
   }
 
-  // ── PROPUESTAS ───────────────────────────────────────────────
-  function flLoadProposals() {
+  // ── MIS PROPUESTAS ───────────────────────────────────────────────
+  function flLoadMyProposals() {
+    $('#fl-my-list').html('<div class="ped-loading"><div class="sp-accent"></div> Cargando...</div>');
+
+    var tryLoad = function (attempts) {
+      var myAgent = flAgentsList.find(function (a) { return a.email === (flCurrentUser && flCurrentUser.email); });
+      if (!myAgent && attempts < 8) {
+        setTimeout(function () { tryLoad(attempts + 1); }, 600); return;
+      }
+      if (!myAgent) {
+        $('#fl-my-list').html('<div class="prop-empty">Tu usuario no aparece en la lista de asesores.</div>'); return;
+      }
+      flApi('GET', '/v1/proposal', { createdBy: myAgent.id, limit: 200 },
+        function (res) {
+          var list = Array.isArray(res) ? res : (res.data || res.results || []);
+          flMyProposalsList = list;
+          console.log('Mis propuestas:', list.length);
+          $('#view-my-proposals .filter-btn').removeClass('active');
+          $('#view-my-proposals .filter-btn[data-status="all"]').addClass('active');
+          flRenderPropCards(flMyProposalsList, '#fl-my-list');
+        },
+        function (e) {
+          flToast('Error ' + e.status + ' al cargar propuestas', 'err');
+          $('#fl-my-list').html('<div class="prop-empty">No se pudieron cargar las propuestas.</div>');
+        }
+      );
+    };
+    tryLoad(0);
+  }
+
+  function flFilterMy(status, btn) {
+    $('#view-my-proposals .filter-btn').removeClass('active');
+    $(btn).addClass('active');
+    var list = status === 'all' ? flMyProposalsList : flMyProposalsList.filter(function (p) { return p.status === status; });
+    flRenderPropCards(list, '#fl-my-list');
+  }
+
+  // ── BUSCAR Y EDITAR ──────────────────────────────────────────────
+  function flLoadSearchProposals() {
     var email = $('#fl-agent-select').val();
     if (!email) return flToast('Selecciona un asesor', 'err');
-
-    var agent   = flAgentsList.find(function (a) { return a.email === email; });
-    var agentId = agent ? agent.id : '';
-    if (!agentId) return flToast('No se encontró el ID del asesor', 'err');
+    var agent = flAgentsList.find(function (a) { return a.email === email; });
+    if (!agent || !agent.id) return flToast('No se encontró el ID del asesor', 'err');
 
     $('#fl-btn-load').prop('disabled', true); $('#fl-sp-load').show();
-    console.log('Cargando propuestas createdBy:', agentId);
+    $('#fl-search-list').hide();
+    console.log('Propuestas de:', agent.id);
 
-    flApi('GET', '/v1/proposal', { createdBy: agentId, limit: 200 },
+    flApi('GET', '/v1/proposal', { createdBy: agent.id, limit: 200 },
       function (res) {
         var list = Array.isArray(res) ? res : (res.data || res.results || []);
-        console.log('Propuestas:', list.length);
+        flSearchProposalsList = list;
+        console.log('Propuestas asesor:', list.length);
         $('#fl-btn-load').prop('disabled', false); $('#fl-sp-load').hide();
-        flRenderProposalStep(list);
+        $('#view-search .filter-btn').removeClass('active');
+        $('#view-search .filter-btn[data-status="all"]').addClass('active');
+        flRenderPropCards(flSearchProposalsList, '#fl-search-proposals');
+        $('#fl-search-list').show();
       },
       function (e) {
-        flToast('Error ' + e.status + ' al cargar propuestas', 'err');
+        flToast('Error ' + e.status, 'err');
         $('#fl-btn-load').prop('disabled', false); $('#fl-sp-load').hide();
       }
     );
   }
 
-  function flRenderProposalStep(all) {
-    flProposalsList = all.filter(function (p) { return p.status === 'Ready' || p.status === 'Draft'; });
-    $('#fl-proposals-count').text(flProposalsList.length + ' propuestas (Ready + Draft)');
-
-    var ready = flProposalsList.filter(function (p) { return p.status === 'Ready'; });
-    var draft  = flProposalsList.filter(function (p) { return p.status === 'Draft'; });
-
-    var opts = '<option value="">Seleccione una propuesta</option>';
-    if (ready.length) {
-      opts += '<optgroup label="Ready (' + ready.length + ')">';
-      ready.forEach(function (p) { opts += '<option value="' + (p.id || p._id) + '">' + (p.title || p.proposalNumber || p.id) + '</option>'; });
-      opts += '</optgroup>';
-    }
-    if (draft.length) {
-      opts += '<optgroup label="Draft (' + draft.length + ')">';
-      draft.forEach(function (p) { opts += '<option value="' + (p.id || p._id) + '">' + (p.title || p.proposalNumber || p.id) + '</option>'; });
-      opts += '</optgroup>';
-    }
-    if ($('#fl-proposal-select').data('select2')) $('#fl-proposal-select').select2('destroy');
-    $('#fl-proposal-select').html(opts).select2({ width: '100%', placeholder: 'Seleccione una propuesta' });
-    $('#fl-proposal-select').on('change', flOnProposalChange);
-    flGoStep(2);
+  function flFilterSearch(status, btn) {
+    $('#view-search .filter-btn').removeClass('active');
+    $(btn).addClass('active');
+    var list = status === 'all' ? flSearchProposalsList : flSearchProposalsList.filter(function (p) { return p.status === status; });
+    flRenderPropCards(list, '#fl-search-proposals');
   }
 
-  function flOnProposalChange() {
-    var id = $('#fl-proposal-select').val();
-    if (!id) { $('#fl-prop-preview').hide(); $('#fl-btn-open').prop('disabled', true); return; }
-    var p = flProposalsList.find(function (x) { return (x.id || x._id) === id; });
-    if (p) {
-      $('#fl-prev-title').text(p.title || '(Sin título)');
-      $('#fl-prev-meta').html('N° ' + (p.proposalNumber || '—') + ' &nbsp;&middot;&nbsp; ' + flBadge(p.status));
-      $('#fl-prop-preview').show();
+  // ── RENDER LISTA ─────────────────────────────────────────────────
+  function flRenderPropCards(list, selector) {
+    if (!list.length) {
+      $(selector).html('<div class="prop-empty">No hay propuestas para mostrar.</div>'); return;
     }
-    $('#fl-btn-open').prop('disabled', false);
+    var html = '<div class="prop-cards">';
+    list.forEach(function (p) {
+      var id    = p.id || p._id;
+      var title = p.title || p.proposalNumber || id || '(Sin título)';
+      var num   = p.proposalNumber ? 'N° ' + p.proposalNumber : '';
+      var date  = p.createdAt ? new Date(p.createdAt).toLocaleDateString('es-CO') : '';
+      var url   = p.url || p.link || p.shareUrl || ('https://' + domain + '/proposal/' + id);
+      html +=
+        '<div class="prop-card">' +
+          '<div class="pc-info">' +
+            '<div class="pc-title">' + title + '</div>' +
+            '<div class="pc-meta">' +
+              flBadge(p.status || 'Draft') +
+              (num  ? '<span>' + num  + '</span>' : '') +
+              (date ? '<span>' + date + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="pc-actions">' +
+            '<a class="btn-view-sm" href="' + url + '" target="_blank" rel="noopener">Abrir</a>' +
+            '<button class="btn-edit-sm" onclick="flEditProposal(\'' + id + '\')">Editar</button>' +
+          '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+    $(selector).html(html);
   }
 
-  // ── DETALLE ──────────────────────────────────────────────────
-  function flLoadDetail() {
-    var id = $('#fl-proposal-select').val();
-    if (!id) return;
-    $('#fl-btn-open').prop('disabled', true); $('#fl-sp-detail').show();
+  // ── EDITAR PROPUESTA ─────────────────────────────────────────────
+  function flEditProposal(id) {
+    flShowView('view-editor', 'Editar');
+    $('#fl-save-success').hide();
+    $('#fl-ed-products').html('<div class="ped-loading"><div class="sp-accent"></div> Cargando...</div>');
 
     flApi('GET', '/v1/proposal/' + id, {},
       function (res) {
-        console.log('Detalle propuesta:', JSON.stringify(res, null, 2));
+        console.log('Detalle:', JSON.stringify(res, null, 2));
         flCurrentProposal = res;
         flCurrentProducts = flParseProducts(res.products);
-        flRenderEditor(); flGoStep(3);
-        $('#fl-btn-open').prop('disabled', false); $('#fl-sp-detail').hide();
+        flRenderEditor();
+        if ($('#fl-add-prod').data('select2')) $('#fl-add-prod').select2('destroy');
+        var opts = '<option value="">Buscar en catálogo...</option>';
+        _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
+          opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
+        });
+        $('#fl-add-prod').html(opts).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
       },
       function (e) {
-        flToast('Error al cargar detalle: ' + e.status, 'err');
-        $('#fl-btn-open').prop('disabled', false); $('#fl-sp-detail').hide();
+        flToast('Error al cargar propuesta: ' + e.status, 'err');
+        flGoHome();
       }
     );
   }
 
-  // ── PRODUCTOS ────────────────────────────────────────────────
+  // ── PRODUCTOS ────────────────────────────────────────────────────
   function flParseProducts(raw) {
     if (!raw) return [];
     if (Array.isArray(raw)) return raw.map(flNormProd);
-    if (typeof raw === 'string') { try { return JSON.parse(raw).map(flNormProd); } catch (e) { return []; } }
+    if (typeof raw === 'string') { try { return JSON.parse(raw).map(flNormProd); } catch (_) { return []; } }
     if (typeof raw === 'object') return [flNormProd(raw)];
     return [];
   }
+
   function flNormProd(p) {
     var sku  = p.id || p.sku || p._id || '';
     var name = p.name || '';
@@ -796,7 +1163,7 @@
   function flRenderEditor() {
     var p = flCurrentProposal;
     $('#fl-ed-title').text(p.title || '(Sin título)');
-    $('#fl-ed-num').text('N° ' + (p.proposalNumber || '—'));
+    $('#fl-ed-num').text(p.proposalNumber ? 'N° ' + p.proposalNumber : '');
     $('#fl-ed-badge').html(flBadge(p.status || 'Draft'));
     $('#fl-ed-status').val(p.status || 'Draft');
     flRenderProductList();
@@ -805,18 +1172,19 @@
   function flRenderProductList() {
     var $list = $('#fl-ed-products');
     if (!flCurrentProducts.length) {
-      $list.html('<div class="prod-empty">Sin productos.<br>Agrega uno desde el catálogo.</div>'); return;
+      $list.html('<div class="prod-empty">Sin productos. Agrega uno abajo.</div>'); return;
     }
     var html = '<div class="prod-list">';
     flCurrentProducts.forEach(function (prod, i) {
-      html += '<div class="prod-row">' +
-        '<div class="prod-info">' +
-          '<div class="prod-name">' + (prod.name || prod.id) + '</div>' +
-          '<div class="prod-sku">'  + prod.id + '</div>' +
-        '</div>' +
-        '<input type="number" class="prod-qty" value="' + prod.quantity + '" min="1" max="999" data-idx="' + i + '">' +
-        '<button class="prod-remove" onclick="flRemoveProduct(' + i + ')">✕</button>' +
-      '</div>';
+      html +=
+        '<div class="prod-row">' +
+          '<div class="prod-info">' +
+            '<div class="prod-name">' + (prod.name || prod.id) + '</div>' +
+            '<div class="prod-sku">'  + prod.id + '</div>' +
+          '</div>' +
+          '<input type="number" class="prod-qty" value="' + prod.quantity + '" min="1" max="999" data-idx="' + i + '">' +
+          '<button class="prod-remove" onclick="flRemoveProduct(' + i + ')">✕</button>' +
+        '</div>';
     });
     html += '</div>';
     $list.html(html);
@@ -835,8 +1203,9 @@
     var qty = Math.max(1, parseInt($('#fl-add-qty').val()) || 1);
     if (!sku) return flToast('Selecciona un producto', 'err');
     var exists = flCurrentProducts.find(function (p) { return p.id === sku; });
-    if (exists) { exists.quantity += qty; flRenderProductList(); flToast('Cantidad actualizada (' + exists.quantity + ')', 'ok'); }
-    else {
+    if (exists) {
+      exists.quantity += qty; flRenderProductList(); flToast('Cantidad actualizada: ' + exists.quantity, 'ok');
+    } else {
       var cat = flProductsCatalog.find(function (p) { return p.sku === sku; });
       flCurrentProducts.push({ id: sku, quantity: qty, name: cat ? cat.name : sku });
       flRenderProductList(); flToast('Producto agregado', 'ok');
@@ -845,11 +1214,13 @@
     $('#fl-add-qty').val(1);
   }
 
-  // ── GUARDAR ──────────────────────────────────────────────────
+  // ── GUARDAR ──────────────────────────────────────────────────────
   function flSaveProposal() {
     if (!flCurrentProposal) return;
     var id = flCurrentProposal.id || flCurrentProposal._id;
-    $('#fl-btn-save').prop('disabled', true); $('#fl-btn-save-text').text('Guardando...'); $('#fl-sp-save').show();
+    $('#fl-btn-save').prop('disabled', true);
+    $('#fl-btn-save-text').text('Guardando...');
+    $('#fl-sp-save').show();
     $('#fl-save-success').hide();
 
     var newStatus       = $('#fl-ed-status').val();
@@ -858,36 +1229,49 @@
     console.log('PUT /v1/proposal/' + id, body);
 
     function onOk(res) {
-      console.log('Propuesta actualizada:', res);
       flCurrentProposal = res;
       var pid = res.id || res._id || id;
       flPropUrl = res.url || res.link || res.shareUrl || res.proposalUrl || ('https://' + domain + '/proposal/' + pid);
       console.log('URL propuesta:', flPropUrl);
       $('#fl-ed-badge').html(flBadge(newStatus));
-      $('#fl-ss-sub').text('Estado actualizado: ' + newStatus);
+      $('#fl-ss-sub').text('Estado: ' + newStatus);
       $('#fl-prop-url').attr('href', flPropUrl).text(flPropUrl);
       $('#fl-save-success').fadeIn(250);
-      $('#fl-btn-save').prop('disabled', false); $('#fl-btn-save-text').text('Guardar cambios'); $('#fl-sp-save').hide();
+      $('#fl-btn-save').prop('disabled', false);
+      $('#fl-btn-save-text').text('Guardar cambios');
+      $('#fl-sp-save').hide();
     }
 
     function onErr(e, retry) {
       if (e.status === 400 && retry) {
-        console.log('Reintentando con products como JSON string...');
         body.products = JSON.stringify(productsPayload);
-        $.ajax({ url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT', data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders, success: onOk, error: function (e2) { onErr(e2, false); } });
+        $.ajax({
+          url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT',
+          data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders,
+          success: onOk, error: function (e2) { onErr(e2, false); }
+        });
       } else {
         flToast('Error al guardar (' + e.status + ')', 'err');
-        $('#fl-btn-save').prop('disabled', false); $('#fl-btn-save-text').text('Guardar cambios'); $('#fl-sp-save').hide();
+        $('#fl-btn-save').prop('disabled', false);
+        $('#fl-btn-save-text').text('Guardar cambios');
+        $('#fl-sp-save').hide();
       }
     }
 
-    $.ajax({ url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT', data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders, success: onOk, error: function (e) { onErr(e, true); } });
+    $.ajax({
+      url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT',
+      data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders,
+      success: onOk, error: function (e) { onErr(e, true); }
+    });
   }
 
   function flOpenUrl() { if (flPropUrl) window.open(flPropUrl, '_blank'); }
   function flCopyUrl() {
     if (!flPropUrl) return;
-    var done = function () { $('#fl-btn-copy').text('¡Copiado!'); setTimeout(function () { $('#fl-btn-copy').text('Copiar enlace'); }, 2000); };
+    var done = function () {
+      $('#fl-btn-copy').text('¡Copiado!');
+      setTimeout(function () { $('#fl-btn-copy').text('Copiar enlace'); }, 2000);
+    };
     if (navigator.clipboard) { navigator.clipboard.writeText(flPropUrl).then(done); }
     else {
       var tmp = document.createElement('input'); tmp.value = flPropUrl;
@@ -895,23 +1279,116 @@
     }
   }
 
-  // ── CATÁLOGO ─────────────────────────────────────────────────
+  // ── CREAR PROPUESTA ──────────────────────────────────────────────
+  function flRenderCreateProducts() {
+    var $list = $('#fl-create-products');
+    if (!flCreateProducts.length) {
+      $list.html('<div class="prod-empty">Sin productos aún.</div>'); return;
+    }
+    var html = '<div class="prod-list">';
+    flCreateProducts.forEach(function (prod, i) {
+      html +=
+        '<div class="prod-row">' +
+          '<div class="prod-info">' +
+            '<div class="prod-name">' + (prod.name || prod.id) + '</div>' +
+            '<div class="prod-sku">'  + prod.id + '</div>' +
+          '</div>' +
+          '<input type="number" class="prod-qty" value="' + prod.quantity + '" min="1" max="999" data-cidx="' + i + '">' +
+          '<button class="prod-remove" onclick="flCreateRemoveProduct(' + i + ')">✕</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    $list.html(html);
+    $list.find('.prod-qty').on('change input', function () {
+      var idx = parseInt($(this).data('cidx'));
+      flCreateProducts[idx].quantity = Math.max(1, parseInt($(this).val()) || 1);
+    });
+  }
+
+  function flCreateAddProduct() {
+    var sku = $('#fl-create-add-prod').val();
+    var qty = Math.max(1, parseInt($('#fl-create-add-qty').val()) || 1);
+    if (!sku) return flToast('Selecciona un producto', 'err');
+    var exists = flCreateProducts.find(function (p) { return p.id === sku; });
+    if (exists) {
+      exists.quantity += qty; flRenderCreateProducts(); flToast('Cantidad actualizada: ' + exists.quantity, 'ok');
+    } else {
+      var cat = flProductsCatalog.find(function (p) { return p.sku === sku; });
+      flCreateProducts.push({ id: sku, quantity: qty, name: cat ? cat.name : sku });
+      flRenderCreateProducts(); flToast('Producto agregado', 'ok');
+    }
+    $('#fl-create-add-prod').val('').trigger('change');
+    $('#fl-create-add-qty').val(1);
+  }
+
+  function flCreateRemoveProduct(idx) {
+    flCreateProducts.splice(idx, 1); flRenderCreateProducts(); flToast('Producto eliminado', 'ok');
+  }
+
+  function flCreateProposal() {
+    var title = $('#fl-create-title').val().trim();
+    if (!title) return flToast('Ingresa un título', 'err');
+
+    var myAgent         = flAgentsList.find(function (a) { return a.email === (flCurrentUser && flCurrentUser.email); });
+    var productsPayload = flCreateProducts.map(function (p) { return { id: p.id, quantity: p.quantity }; });
+    var body = { title: title, status: $('#fl-create-status').val(), products: productsPayload };
+    if (myAgent) body.createdBy = myAgent.id;
+
+    console.log('POST /v1/proposal', body);
+    $('#fl-btn-create').prop('disabled', true);
+    $('#fl-btn-create-text').text('Creando...');
+    $('#fl-sp-create').show();
+    $('#fl-create-success').hide();
+
+    function onOk(res) {
+      console.log('Propuesta creada:', res);
+      var pid = res.id || res._id;
+      flCreatePropUrl = res.url || res.link || res.shareUrl || ('https://' + domain + '/proposal/' + pid);
+      console.log('URL:', flCreatePropUrl);
+      $('#fl-create-sub').text('"' + title + '" creada correctamente');
+      $('#fl-create-url').attr('href', flCreatePropUrl).text(flCreatePropUrl);
+      $('#fl-create-open-btn').off('click').on('click', function () { window.open(flCreatePropUrl, '_blank'); });
+      $('#fl-create-success').fadeIn(250);
+      $('#fl-btn-create').prop('disabled', false);
+      $('#fl-btn-create-text').text('Crear propuesta');
+      $('#fl-sp-create').hide();
+    }
+
+    function onErr(e, retry) {
+      if (e.status === 400 && retry) {
+        body.products = JSON.stringify(productsPayload);
+        $.ajax({
+          url: 'https://' + domain + '/v1/proposal', type: 'POST',
+          data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders,
+          success: onOk, error: function (e2) { onErr(e2, false); }
+        });
+      } else {
+        flToast('Error al crear (' + e.status + ')', 'err');
+        $('#fl-btn-create').prop('disabled', false);
+        $('#fl-btn-create-text').text('Crear propuesta');
+        $('#fl-sp-create').hide();
+      }
+    }
+
+    $.ajax({
+      url: 'https://' + domain + '/v1/proposal', type: 'POST',
+      data: JSON.stringify(body), contentType: 'application/json', headers: flAuthHeaders,
+      success: onOk, error: function (e) { onErr(e, true); }
+    });
+  }
+
+  // ── CATÁLOGO ─────────────────────────────────────────────────────
   function flLoadCatalog() {
     flApi('GET', '/v1/product?disabled=false', {},
       function (res) {
         var items = res.data || res || [];
         flProductsCatalog = items.map(function (p) { return { sku: p.sku, name: p.name }; });
         console.log('Catálogo:', flProductsCatalog.length, 'productos');
-        var opts = '<option value="">Buscar en catálogo...</option>';
-        _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
-          opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
-        });
-        $('#fl-add-prod').html(opts).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
       }
     );
   }
 
-  // ── INIT ─────────────────────────────────────────────────────
+  // ── INIT ─────────────────────────────────────────────────────────
   $(document).ready(function () {
     flShowView('view-login');
   });
