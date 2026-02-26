@@ -8,14 +8,14 @@
 <style>
 /* ── Variables ─────────────────────────────────────────────── */
 #bot-customer-design {
-  --orange:      #10b981;
-  --orange-deep: #059669;
+  --orange:      #a855f7;
+  --orange-deep: #9333ea;
   --panel:       #09090e;
   --panel-soft:  #111118;
   --input-bg:    #16161f;
   --input-bd:    #2a2a38;
-  --input-focus: #ff6a00;
-  --label:       #ff6a00;
+  --input-focus: #a855f7;
+  --label:       #a855f7;
   --text:        #f1f5f9;
   --text-soft:   #8892a4;
   --white:       #ffffff;
@@ -136,7 +136,7 @@
 #bot-customer-design input[type="email"]:focus,
 #bot-customer-design input[type="tel"]:focus {
   border-color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
 }
 
 #bot-customer-design input::placeholder { color: #5a5a72; }
@@ -181,7 +181,7 @@
 #bot-customer-design .select2-container--default.select2-container--open .select2-selection--single,
 #bot-customer-design .select2-container--default.select2-container--focus .select2-selection--single {
   border-color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
   outline: none;
 }
 
@@ -333,7 +333,7 @@
 #bot-customer-design .btn-submit:hover:not(:disabled) {
   background: var(--orange-deep);
   transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(16,185,129,0.35);
+  box-shadow: 0 8px 28px rgba(168,85,247,0.35);
 }
 
 #bot-customer-design .btn-submit:active:not(:disabled) { transform: translateY(0); }
@@ -435,7 +435,7 @@
 
       <!-- Captcha imagen -->
       <div class="form-group">
-        <iframe id="captcha-frame" width="130" height="52" scrolling="no" style="border:none;border-radius:8px;background:#fff;display:block;"></iframe>
+        <iframe id="captcha-frame" width="200" height="70" scrolling="no" style="border:none;border-radius:8px;background:#000;display:block;"></iframe>
       </div>
 
       <!-- Captcha input -->
@@ -607,7 +607,7 @@ $(document).ready(function () {
 
   $('#model').select2({ width: '100%' });
 
-  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=black&noise=2&size=4');
+  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
 
   loadAgents();
   loadProducts();
