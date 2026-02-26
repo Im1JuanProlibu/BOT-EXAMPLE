@@ -4,244 +4,282 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  /* ── Scope ──────────────────────────────────────────────────── */
+  /* ── Variables & reset ──────────────────────────────────────── */
   #bot-proposal-editor {
     --accent:      #3b82f6;
     --accent-deep: #2563eb;
-    --panel:       #09090e;
-    --panel-soft:  #111118;
-    --input-bg:    #16161f;
-    --input-bd:    #2a2a38;
-    --text:        #f1f5f9;
-    --text-soft:   #8892a4;
-    --danger:      #ef4444;
-    --success:     #22c55e;
+    --accent-glow: rgba(59,130,246,0.14);
+    --bg:          #07070f;
+    --surface:     rgba(255,255,255,0.025);
+    --surface-2:   rgba(255,255,255,0.045);
+    --border:      rgba(255,255,255,0.07);
+    --text:        #dde3ef;
+    --text-soft:   #5a6478;
+    --danger:      #f87171;
+    --success:     #34d399;
     --warn:        #fbbf24;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
-    background: var(--panel);
+    background: var(--bg);
     min-height: 100vh;
-    padding: 40px 32px;
+    padding: 52px 28px;
     color: var(--text);
   }
+  #bot-proposal-editor *, #bot-proposal-editor *::before, #bot-proposal-editor *::after { box-sizing: inherit; }
 
-  #bot-proposal-editor *,
-  #bot-proposal-editor *::before,
-  #bot-proposal-editor *::after { box-sizing: inherit; }
-
-  /* ── Layout ─────────────────────────────────────────────────── */
-  #bot-proposal-editor .ped-wrap { max-width: 700px; margin: 0 auto; }
+  /* ── Wrap ───────────────────────────────────────────────────── */
+  #bot-proposal-editor .ped-wrap { max-width: 560px; margin: 0 auto; }
 
   /* ── Header ─────────────────────────────────────────────────── */
   #bot-proposal-editor .ped-title {
-    font-size: 1.55rem; font-weight: 800; color: #fff;
-    margin: 0 0 4px; letter-spacing: -0.3px;
+    font-size: 1.35rem; font-weight: 700; color: #fff;
+    margin: 0 0 6px; letter-spacing: -0.4px;
   }
-  #bot-proposal-editor .ped-subtitle { font-size: 0.82rem; color: var(--text-soft); margin: 0 0 28px; }
+  #bot-proposal-editor .ped-subtitle { font-size: 0.79rem; color: var(--text-soft); margin: 0 0 36px; }
 
-  /* ── Steps breadcrumb ───────────────────────────────────────── */
+  /* ── Steps ──────────────────────────────────────────────────── */
   #bot-proposal-editor .ped-steps {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 24px; font-size: 0.75rem;
+    display: flex; align-items: flex-start; margin-bottom: 32px;
   }
+  #bot-proposal-editor .step-node {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+  }
+  #bot-proposal-editor .step-line {
+    flex: 1; height: 1px; background: var(--border); margin-top: 14px; transition: background 0.3s;
+  }
+  #bot-proposal-editor .step-line.done { background: rgba(59,130,246,0.35); }
   #bot-proposal-editor .sdot {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--input-bg); border: 1.5px solid var(--input-bd);
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--surface-2); border: 1.5px solid var(--border);
     color: var(--text-soft); display: flex; align-items: center;
-    justify-content: center; font-weight: 700; font-size: 0.72rem;
-    flex-shrink: 0; transition: all 0.2s;
+    justify-content: center; font-weight: 600; font-size: 0.72rem;
+    transition: all 0.25s; position: relative;
   }
-  #bot-proposal-editor .sdot.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  #bot-proposal-editor .sdot.done   { background: #1e3a5f; border-color: var(--accent); color: var(--accent); }
-  #bot-proposal-editor .sline { flex: 1; height: 1px; background: var(--input-bd); }
-  #bot-proposal-editor .slabel { color: var(--text-soft); font-size: 0.72rem; }
+  #bot-proposal-editor .sdot.active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+  #bot-proposal-editor .sdot.done {
+    background: transparent; border-color: var(--accent); color: var(--accent);
+  }
+  #bot-proposal-editor .sdot.done .snum { display: none; }
+  #bot-proposal-editor .sdot.done::after { content: '✓'; font-size: 0.75rem; }
+  #bot-proposal-editor .slabel {
+    font-size: 0.67rem; font-weight: 500; color: var(--text-soft);
+    letter-spacing: 0.2px; white-space: nowrap;
+  }
+  #bot-proposal-editor .step-node.s-active .slabel { color: var(--accent); }
+  #bot-proposal-editor .step-node.s-done  .slabel { color: rgba(59,130,246,0.55); }
 
   /* ── Card ───────────────────────────────────────────────────── */
   #bot-proposal-editor .ped-card {
-    background: var(--panel-soft); border: 1px solid var(--input-bd);
-    border-radius: 12px; padding: 22px; margin-bottom: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px; margin-bottom: 10px;
   }
-  #bot-proposal-editor .card-label {
-    font-size: 0.67rem; font-weight: 700; color: var(--accent);
-    text-transform: uppercase; letter-spacing: 1.3px;
-    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  #bot-proposal-editor .card-sec {
+    font-size: 0.63rem; font-weight: 700; color: var(--text-soft);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
   }
-  #bot-proposal-editor .card-label::after {
-    content: ''; flex: 1; height: 1px; background: var(--input-bd);
-  }
+  #bot-proposal-editor .card-sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* ── Form label ─────────────────────────────────────────────── */
-  #bot-proposal-editor .flabel {
-    font-size: 0.75rem; color: var(--text-soft);
-    display: block; margin-bottom: 6px;
-  }
+  /* ── Label ───────────────────────────────────────────────────── */
+  #bot-proposal-editor .flabel { font-size: 0.72rem; font-weight: 500; color: var(--text-soft); display: block; margin-bottom: 8px; }
 
-  /* ── Select2 dark theme ─────────────────────────────────────── */
+  /* ── Select2 ─────────────────────────────────────────────────── */
   #bot-proposal-editor .select2-container { width: 100% !important; }
   #bot-proposal-editor .select2-container--default .select2-selection--single {
-    background: var(--input-bg); border: 1px solid var(--input-bd);
-    border-radius: 8px; height: 42px; transition: border-color 0.2s;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; height: 44px; transition: all 0.2s;
   }
   #bot-proposal-editor .select2-container--default.select2-container--open .select2-selection--single,
   #bot-proposal-editor .select2-container--default.select2-container--focus .select2-selection--single {
-    border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); outline: none;
+    border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); outline: none;
   }
   #bot-proposal-editor .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: var(--text); line-height: 40px; padding-left: 14px;
-    font-size: 0.88rem; font-family: 'Inter', sans-serif;
+    color: var(--text); line-height: 42px; padding-left: 14px; font-size: 0.875rem; font-family: 'Inter', sans-serif;
   }
-  #bot-proposal-editor .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: var(--text-soft);
-  }
-  #bot-proposal-editor .select2-container--default .select2-selection--single .select2-selection__arrow b {
-    border-top-color: var(--text-soft);
-  }
+  #bot-proposal-editor .select2-container--default .select2-selection--single .select2-selection__placeholder { color: var(--text-soft); }
+  #bot-proposal-editor .select2-container--default .select2-selection--single .select2-selection__arrow b { border-top-color: var(--text-soft); }
   #bot-proposal-editor .select2-dropdown {
-    background: #1a1a26; border: 1px solid var(--input-bd); border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5); font-family: 'Inter', sans-serif;
-    font-size: 0.88rem; color: var(--text);
+    background: #10101c; border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.65); font-family: 'Inter', sans-serif; font-size: 0.875rem; overflow: hidden;
   }
-  #bot-proposal-editor .select2-results__option { color: var(--text); padding: 8px 14px; }
-  #bot-proposal-editor .select2-results__option:hover { background: #2a2a38; }
-  #bot-proposal-editor .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background: var(--accent); color: #fff;
-  }
-  #bot-proposal-editor .select2-results__group { color: var(--text-soft); font-size: 0.72rem; font-weight: 700; padding: 8px 14px 4px; }
+  #bot-proposal-editor .select2-results__option { color: var(--text); padding: 9px 14px; }
+  #bot-proposal-editor .select2-results__option:hover { background: rgba(255,255,255,0.05); }
+  #bot-proposal-editor .select2-container--default .select2-results__option--highlighted[aria-selected] { background: var(--accent); color: #fff; }
+  #bot-proposal-editor .select2-results__group { color: var(--text-soft); font-size: 0.65rem; font-weight: 700; padding: 9px 14px 5px; letter-spacing: 1px; text-transform: uppercase; }
   #bot-proposal-editor .select2-search__field {
-    background: var(--input-bg) !important; color: var(--text) !important;
-    border: 1px solid var(--input-bd) !important; border-radius: 6px !important;
-    padding: 6px 10px !important; font-family: 'Inter', sans-serif !important;
+    background: rgba(255,255,255,0.04) !important; color: var(--text) !important;
+    border: 1px solid var(--border) !important; border-radius: 7px !important;
+    padding: 7px 11px !important; font-family: 'Inter', sans-serif !important; font-size: 0.875rem !important;
   }
 
-  /* ── Native select (status) ─────────────────────────────────── */
+  /* ── Native select ───────────────────────────────────────────── */
   #bot-proposal-editor .nat-select {
-    width: 100%; background: var(--input-bg); border: 1px solid var(--input-bd);
-    border-radius: 8px; padding: 10px 14px; font-size: 0.88rem;
-    font-family: 'Inter', sans-serif; color: var(--text); outline: none;
-    cursor: pointer; transition: border-color 0.2s;
+    width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 36px 11px 14px; font-size: 0.875rem;
+    font-family: 'Inter', sans-serif; color: var(--text); outline: none; cursor: pointer;
+    appearance: none; transition: all 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6478' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
   }
-  #bot-proposal-editor .nat-select:focus { border-color: var(--accent); }
-  #bot-proposal-editor .nat-select option { background: #1a1a26; }
+  #bot-proposal-editor .nat-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+  #bot-proposal-editor .nat-select option { background: #10101c; }
 
   /* ── Proposal preview ───────────────────────────────────────── */
   #bot-proposal-editor .prop-preview {
-    background: var(--input-bg); border: 1px solid var(--input-bd);
-    border-radius: 8px; padding: 12px 14px; margin-top: 10px;
-    display: none;
+    background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.15);
+    border-radius: 10px; padding: 14px 16px; margin-top: 12px; display: none;
   }
-  #bot-proposal-editor .prop-preview-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
-  #bot-proposal-editor .prop-preview-meta  { font-size: 0.75rem; color: var(--text-soft); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  #bot-proposal-editor .prop-preview-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 5px; }
+  #bot-proposal-editor .prop-preview-meta { font-size: 0.72rem; color: var(--text-soft); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
   /* ── Products list ──────────────────────────────────────────── */
-  #bot-proposal-editor .prod-list { display: flex; flex-direction: column; gap: 8px; }
+  #bot-proposal-editor .prod-list { display: flex; flex-direction: column; gap: 6px; }
   #bot-proposal-editor .prod-row {
     display: flex; align-items: center; gap: 10px;
-    background: var(--input-bg); border: 1px solid var(--input-bd);
-    border-radius: 8px; padding: 10px 14px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 14px; transition: border-color 0.15s;
   }
+  #bot-proposal-editor .prod-row:hover { border-color: rgba(255,255,255,0.13); }
   #bot-proposal-editor .prod-info { flex: 1; min-width: 0; }
-  #bot-proposal-editor .prod-name { font-size: 0.86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #bot-proposal-editor .prod-sku  { font-size: 0.7rem; color: var(--text-soft); font-family: monospace; }
+  #bot-proposal-editor .prod-name { font-size: 0.84rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #bot-proposal-editor .prod-sku  { font-size: 0.66rem; color: var(--text-soft); font-family: monospace; margin-top: 2px; }
   #bot-proposal-editor .prod-qty {
-    width: 58px; background: var(--panel-soft); border: 1px solid var(--input-bd);
-    border-radius: 6px; padding: 5px 8px; font-size: 0.85rem; color: var(--text);
-    text-align: center; font-family: 'Inter', sans-serif; outline: none;
+    width: 58px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 7px; padding: 5px 8px; font-size: 0.84rem; color: var(--text);
+    text-align: center; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
   }
   #bot-proposal-editor .prod-qty:focus { border-color: var(--accent); }
   #bot-proposal-editor .prod-remove {
-    background: none; border: 1px solid var(--danger); color: var(--danger);
-    border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer;
+    background: none; border: 1px solid rgba(248,113,113,0.25); color: var(--danger);
+    border-radius: 7px; padding: 5px 10px; font-size: 0.72rem; cursor: pointer;
     font-family: 'Inter', sans-serif; transition: all 0.15s; flex-shrink: 0;
   }
-  #bot-proposal-editor .prod-remove:hover { background: rgba(239,68,68,0.12); }
-  #bot-proposal-editor .prod-empty {
-    text-align: center; padding: 20px; color: var(--text-soft); font-size: 0.83rem;
-  }
+  #bot-proposal-editor .prod-remove:hover { background: rgba(248,113,113,0.08); border-color: var(--danger); }
+  #bot-proposal-editor .prod-empty { text-align: center; padding: 24px 16px; color: var(--text-soft); font-size: 0.79rem; line-height: 1.6; }
 
-  /* ── Add product row ─────────────────────────────────────────── */
-  #bot-proposal-editor .add-row {
-    display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap;
-  }
+  /* ── Add product ─────────────────────────────────────────────── */
+  #bot-proposal-editor .add-row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
   #bot-proposal-editor .add-row .s2-wrap { flex: 1; min-width: 180px; }
   #bot-proposal-editor .add-qty {
-    width: 68px; background: var(--input-bg); border: 1px solid var(--input-bd);
-    border-radius: 8px; padding: 10px 8px; font-size: 0.88rem; color: var(--text);
-    text-align: center; font-family: 'Inter', sans-serif; outline: none;
+    width: 70px; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 8px; font-size: 0.875rem; color: var(--text);
+    text-align: center; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s;
   }
   #bot-proposal-editor .add-qty:focus { border-color: var(--accent); }
 
+  /* ── Proposal head in editor ─────────────────────────────────── */
+  #bot-proposal-editor .prop-head { margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+  #bot-proposal-editor .prop-head-title { font-size: 1rem; font-weight: 700; margin-bottom: 7px; line-height: 1.35; }
+  #bot-proposal-editor .prop-head-meta { font-size: 0.72rem; color: var(--text-soft); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
   /* ── Buttons ─────────────────────────────────────────────────── */
   #bot-proposal-editor .btn {
-    padding: 11px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 700;
+    padding: 11px 20px; border-radius: 10px; font-size: 0.84rem; font-weight: 600;
     font-family: 'Inter', sans-serif; cursor: pointer; border: none;
     transition: all 0.15s; display: inline-flex; align-items: center;
     justify-content: center; gap: 8px;
   }
-  #bot-proposal-editor .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  #bot-proposal-editor .btn-primary  { background: var(--accent); color: #fff; width: 100%; margin-top: 10px; }
-  #bot-proposal-editor .btn-primary:hover:not(:disabled)  { background: var(--accent-deep); transform: translateY(-1px); }
-  #bot-proposal-editor .btn-success  { background: var(--success); color: #fff; width: 100%; }
-  #bot-proposal-editor .btn-success:hover:not(:disabled)  { filter: brightness(1.1); transform: translateY(-1px); }
+  #bot-proposal-editor .btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+  #bot-proposal-editor .btn-primary { background: var(--accent); color: #fff; width: 100%; margin-top: 14px; }
+  #bot-proposal-editor .btn-primary:hover { background: var(--accent-deep); transform: translateY(-1px); box-shadow: 0 4px 18px rgba(59,130,246,0.3); }
+
+  #bot-proposal-editor .btn-save {
+    width: 100%; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: #fff; margin-top: 4px; box-shadow: 0 2px 14px rgba(34,197,94,0.18);
+  }
+  #bot-proposal-editor .btn-save:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 4px 22px rgba(34,197,94,0.3); }
+
   #bot-proposal-editor .btn-ghost {
-    background: transparent; border: 1px solid var(--input-bd); color: var(--text-soft);
-    font-size: 0.78rem; padding: 7px 14px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-soft); font-size: 0.78rem; padding: 7px 14px;
   }
-  #bot-proposal-editor .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  #bot-proposal-editor .btn-ghost:hover { border-color: rgba(255,255,255,0.18); color: var(--text); }
+
   #bot-proposal-editor .btn-add {
-    background: rgba(59,130,246,0.12); border: 1px solid var(--accent);
-    color: var(--accent); padding: 10px 16px; white-space: nowrap;
+    background: var(--accent-glow); border: 1px solid rgba(59,130,246,0.28);
+    color: var(--accent); padding: 11px 16px; white-space: nowrap;
   }
-  #bot-proposal-editor .btn-add:hover { background: rgba(59,130,246,0.22); }
+  #bot-proposal-editor .btn-add:hover { background: rgba(59,130,246,0.2); }
+
+  #bot-proposal-editor .btn-open { background: var(--accent); color: #fff; flex: 1; }
+  #bot-proposal-editor .btn-open:hover { background: var(--accent-deep); }
+
+  #bot-proposal-editor .btn-copy {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text-soft);
+  }
+  #bot-proposal-editor .btn-copy:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
 
   /* ── Spinner ─────────────────────────────────────────────────── */
   #bot-proposal-editor .spinner {
-    width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff; border-radius: 50%;
-    animation: ped-spin 0.7s linear infinite; display: none;
+    width: 14px; height: 14px; border: 1.8px solid rgba(255,255,255,0.22);
+    border-top-color: #fff; border-radius: 50%; animation: ped-spin 0.65s linear infinite;
+    display: none; flex-shrink: 0;
+  }
+  #bot-proposal-editor .sp-blue {
+    width: 14px; height: 14px; border: 1.8px solid rgba(59,130,246,0.2);
+    border-top-color: var(--accent); border-radius: 50%; animation: ped-spin 0.65s linear infinite;
   }
   @keyframes ped-spin { to { transform: rotate(360deg); } }
 
-  /* ── Status badge ───────────────────────────────────────────── */
+  /* ── Badge ───────────────────────────────────────────────────── */
   #bot-proposal-editor .badge {
-    display: inline-flex; align-items: center; padding: 2px 9px;
-    border-radius: 999px; font-size: 0.67rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.4px;
+    display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px;
+    font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
   }
-  #bot-proposal-editor .badge-Ready { background: rgba(34,197,94,0.15);  color: #22c55e; }
-  #bot-proposal-editor .badge-Draft { background: rgba(251,191,36,0.15); color: #fbbf24; }
-  #bot-proposal-editor .badge-Sent  { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  #bot-proposal-editor .badge-Ready { background: rgba(52,211,153,0.12); color: #34d399; }
+  #bot-proposal-editor .badge-Draft { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+  #bot-proposal-editor .badge-Sent  { background: rgba(59,130,246,0.12);  color: #3b82f6; }
 
-  /* ── Proposal info header in editor ────────────────────────── */
-  #bot-proposal-editor .prop-head { margin-bottom: 16px; }
-  #bot-proposal-editor .prop-head-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-  #bot-proposal-editor .prop-head-meta  { font-size: 0.75rem; color: var(--text-soft); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  /* ── Row meta ────────────────────────────────────────────────── */
+  #bot-proposal-editor .row-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  #bot-proposal-editor .meta-count { font-size: 0.72rem; color: var(--text-soft); }
 
-  /* ── Toast ──────────────────────────────────────────────────── */
+  /* ── Loading ─────────────────────────────────────────────────── */
+  #bot-proposal-editor .ped-loading { display: flex; align-items: center; gap: 10px; padding: 20px; color: var(--text-soft); font-size: 0.79rem; justify-content: center; }
+
+  /* ── Save success panel ──────────────────────────────────────── */
+  #bot-proposal-editor .save-success {
+    display: none; background: rgba(52,211,153,0.05);
+    border: 1px solid rgba(52,211,153,0.18); border-radius: 14px;
+    padding: 20px; margin-top: 10px;
+  }
+  #bot-proposal-editor .ss-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  #bot-proposal-editor .ss-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(52,211,153,0.12); color: #34d399;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+  }
+  #bot-proposal-editor .ss-title { font-weight: 700; font-size: 0.88rem; color: #34d399; }
+  #bot-proposal-editor .ss-sub   { font-size: 0.72rem; color: var(--text-soft); margin-top: 2px; }
+  #bot-proposal-editor .ss-url {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 9px; padding: 9px 13px; margin-bottom: 12px;
+    font-size: 0.72rem; word-break: break-all; line-height: 1.5;
+  }
+  #bot-proposal-editor .ss-url a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  #bot-proposal-editor .ss-url a:hover { text-decoration: underline; }
+  #bot-proposal-editor .ss-actions { display: flex; gap: 8px; }
+
+  /* ── Toast ───────────────────────────────────────────────────── */
   #bot-proposal-editor .ped-toast {
-    position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-    background: #1e2030; border: 1px solid var(--input-bd); border-radius: 10px;
-    padding: 12px 18px; font-size: 0.83rem; color: var(--text);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5); display: none; max-width: 300px;
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: #12121e; border: 1px solid var(--border); border-radius: 12px;
+    padding: 11px 18px; font-size: 0.79rem; color: var(--text);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.55); display: none; max-width: 280px;
+    font-family: 'Inter', sans-serif;
   }
-  #bot-proposal-editor .ped-toast.ok  { border-color: var(--success); }
-  #bot-proposal-editor .ped-toast.err { border-color: var(--danger); }
-
-  /* ── Loading overlay ─────────────────────────────────────────── */
-  #bot-proposal-editor .ped-loading {
-    display: flex; align-items: center; gap: 10px;
-    padding: 18px; color: var(--text-soft); font-size: 0.83rem; justify-content: center;
-  }
-  #bot-proposal-editor .ped-loading .spinner { border-top-color: var(--accent); display: block; }
-
-  /* ── Meta row (count, back) ──────────────────────────────────── */
-  #bot-proposal-editor .row-meta {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
-  }
-  #bot-proposal-editor .meta-count { font-size: 0.75rem; color: var(--text-soft); }
+  #bot-proposal-editor .ped-toast.ok  { border-color: rgba(52,211,153,0.4); }
+  #bot-proposal-editor .ped-toast.err { border-color: rgba(248,113,113,0.4); }
 
   @media (max-width: 600px) {
-    #bot-proposal-editor { padding: 24px 14px; }
+    #bot-proposal-editor { padding: 28px 16px; }
     #bot-proposal-editor .add-row .s2-wrap { width: 100%; }
+    #bot-proposal-editor .ss-actions { flex-direction: column; }
   }
 </style>
 
@@ -249,32 +287,35 @@
 <div id="bot-proposal-editor">
   <div class="ped-wrap">
 
-    <h2 class="ped-title">Editor de Propuestas</h2>
-    <p class="ped-subtitle">Busca, edita y actualiza propuestas por asesor</p>
+    <h2 class="ped-title">Editor de propuestas</h2>
+    <p class="ped-subtitle">Actualiza estado y productos de las propuestas por asesor</p>
 
-    <!-- Breadcrumb steps -->
+    <!-- Steps -->
     <div class="ped-steps">
-      <div class="sdot active" id="sdot-1">1</div>
-      <span class="slabel">Asesor</span>
-      <div class="sline"></div>
-      <div class="sdot" id="sdot-2">2</div>
-      <span class="slabel">Propuesta</span>
-      <div class="sline"></div>
-      <div class="sdot" id="sdot-3">3</div>
-      <span class="slabel">Editar</span>
+      <div class="step-node s-active" id="si-1">
+        <div class="sdot active" id="sdot-1"><span class="snum">1</span></div>
+        <div class="slabel">Asesor</div>
+      </div>
+      <div class="step-line" id="sl-12"></div>
+      <div class="step-node" id="si-2">
+        <div class="sdot" id="sdot-2"><span class="snum">2</span></div>
+        <div class="slabel">Propuesta</div>
+      </div>
+      <div class="step-line" id="sl-23"></div>
+      <div class="step-node" id="si-3">
+        <div class="sdot" id="sdot-3"><span class="snum">3</span></div>
+        <div class="slabel">Editar</div>
+      </div>
     </div>
 
     <!-- ── Step 1: Asesor ── -->
     <div id="step-1">
       <div class="ped-card">
-        <div class="card-label">Asesor</div>
+        <div class="card-sec">Asesor</div>
         <label class="flabel">Selecciona el asesor</label>
-        <select id="agent-select">
-          <option value="">Cargando asesores...</option>
-        </select>
+        <select id="agent-select"><option value="">Cargando asesores...</option></select>
         <button class="btn btn-primary" id="btn-load-proposals" onclick="loadProposals()" disabled>
-          Ver propuestas →
-          <span class="spinner" id="sp-load"></span>
+          Ver propuestas <span class="spinner" id="sp-load"></span>
         </button>
       </div>
     </div>
@@ -282,22 +323,19 @@
     <!-- ── Step 2: Propuesta ── -->
     <div id="step-2" style="display:none">
       <div class="ped-card">
-        <div class="card-label">Propuesta</div>
         <div class="row-meta">
           <button class="btn btn-ghost" onclick="goStep(1)">← Volver</button>
           <span class="meta-count" id="proposals-count"></span>
         </div>
+        <div class="card-sec">Propuesta</div>
         <label class="flabel">Selecciona la propuesta a editar</label>
-        <select id="proposal-select">
-          <option value="">Seleccione una propuesta</option>
-        </select>
+        <select id="proposal-select"><option value="">—</option></select>
         <div class="prop-preview" id="prop-preview">
           <div class="prop-preview-title" id="prev-title"></div>
           <div class="prop-preview-meta" id="prev-meta"></div>
         </div>
         <button class="btn btn-primary" id="btn-open-editor" onclick="loadProposalDetail()" disabled>
-          Editar propuesta →
-          <span class="spinner" id="sp-detail"></span>
+          Editar propuesta <span class="spinner" id="sp-detail"></span>
         </button>
       </div>
     </div>
@@ -307,7 +345,7 @@
 
       <!-- Info + estado -->
       <div class="ped-card">
-        <div class="row-meta" style="margin-bottom:16px">
+        <div class="row-meta" style="margin-bottom:0">
           <button class="btn btn-ghost" onclick="goStep(2)">← Volver</button>
         </div>
         <div class="prop-head">
@@ -317,7 +355,7 @@
             <span id="ed-badge"></span>
           </div>
         </div>
-        <div class="card-label">Estado de la propuesta</div>
+        <div class="card-sec">Estado</div>
         <select class="nat-select" id="ed-status">
           <option value="Draft">Draft — Borrador</option>
           <option value="Ready">Ready — Lista para enviar</option>
@@ -325,24 +363,20 @@
         </select>
       </div>
 
-      <!-- Productos actuales -->
+      <!-- Productos -->
       <div class="ped-card">
-        <div class="card-label">Productos en la propuesta</div>
-        <div class="prod-list" id="ed-products">
-          <div class="ped-loading">
-            <div class="spinner"></div> Cargando productos...
-          </div>
+        <div class="card-sec">Productos</div>
+        <div id="ed-products">
+          <div class="ped-loading"><div class="sp-blue"></div> Cargando productos...</div>
         </div>
       </div>
 
       <!-- Agregar producto -->
       <div class="ped-card">
-        <div class="card-label">Agregar producto</div>
+        <div class="card-sec">Agregar producto</div>
         <div class="add-row">
           <div class="s2-wrap">
-            <select id="add-prod-select">
-              <option value="">Buscar en catálogo...</option>
-            </select>
+            <select id="add-prod-select"><option value="">Buscar en catálogo...</option></select>
           </div>
           <input type="number" class="add-qty" id="add-qty" value="1" min="1" max="999" placeholder="Cant.">
           <button class="btn btn-add" onclick="addProduct()">+ Agregar</button>
@@ -350,10 +384,28 @@
       </div>
 
       <!-- Guardar -->
-      <button class="btn btn-success" id="btn-save" onclick="saveProposal()">
+      <button class="btn btn-save" id="btn-save" onclick="saveProposal()">
         <span id="btn-save-text">Guardar cambios</span>
         <span class="spinner" id="sp-save"></span>
       </button>
+
+      <!-- Panel de éxito con URL -->
+      <div class="save-success" id="save-success">
+        <div class="ss-head">
+          <div class="ss-icon">✓</div>
+          <div>
+            <div class="ss-title">Guardado correctamente</div>
+            <div class="ss-sub" id="ss-sub"></div>
+          </div>
+        </div>
+        <div class="ss-url">
+          <a id="prop-url-link" href="#" target="_blank" rel="noopener"></a>
+        </div>
+        <div class="ss-actions">
+          <button class="btn btn-open" onclick="openPropUrl()">Abrir propuesta →</button>
+          <button class="btn btn-copy" id="btn-copy" onclick="copyPropUrl()">Copiar enlace</button>
+        </div>
+      </div>
 
     </div>
 
@@ -374,18 +426,18 @@
   var domain      = 'customer-design.prolibu.com';
   var bearerToken = 'a6a0278f-b899-44ec-9870-417381a5b6dc';
   var rolesString = 'agent';
-
   var authHeaders = { Authorization: 'Bearer ' + bearerToken };
 
   // ── SDK ──────────────────────────────────────────────────────
   var nodriza = new Nodriza({ hostname: domain });
 
   // ── Estado ──────────────────────────────────────────────────
-  var agentsList     = [];
-  var proposalsList  = [];
+  var agentsList      = [];
+  var proposalsList   = [];
   var productsCatalog = [];
   var currentProposal = null;
-  var currentProducts = []; // [{id, quantity, name}]
+  var currentProducts = [];
+  var propUrl         = '';
 
   // ── Utilidades ───────────────────────────────────────────────
   function toast(msg, type) {
@@ -401,46 +453,42 @@
   function goStep(n) {
     $('#step-1, #step-2, #step-3').hide();
     $('#step-' + n).show();
+    if (n < 3) $('#save-success').hide();
+
     [1, 2, 3].forEach(function (i) {
       $('#sdot-' + i).removeClass('active done');
-      if (i < n) $('#sdot-' + i).addClass('done');
-      else if (i === n) $('#sdot-' + i).addClass('active');
+      $('#si-' + i).removeClass('s-active s-done');
+      if (i < n) { $('#sdot-' + i).addClass('done'); $('#si-' + i).addClass('s-done'); }
+      else if (i === n) { $('#sdot-' + i).addClass('active'); $('#si-' + i).addClass('s-active'); }
     });
+
+    // Colorear líneas conectoras según progreso
+    $('#sl-12').toggleClass('done', n >= 2);
+    $('#sl-23').toggleClass('done', n >= 3);
   }
 
   // ── AJAX helper ──────────────────────────────────────────────
   function api(method, path, data, cb, cbErr) {
     var opts = {
       url: 'https://' + domain + path,
-      type: method,
-      headers: authHeaders,
-      success: cb,
+      type: method, headers: authHeaders, success: cb,
       error: cbErr || function (e) { console.error(method, path, e); }
     };
     if (method === 'PUT' || method === 'POST') {
-      opts.data = JSON.stringify(data);
-      opts.contentType = 'application/json';
-    } else {
-      opts.data = data;
-    }
+      opts.data = JSON.stringify(data); opts.contentType = 'application/json';
+    } else { opts.data = data; }
     $.ajax(opts);
   }
 
-  // ── Step 1: cargar asesores ──────────────────────────────────
+  // ── Cargar asesores ──────────────────────────────────────────
   function loadAgents() {
     $.ajax({
       url: 'https://' + domain + '/v1/publicservices/getAgents',
-      type: 'GET',
-      data: { status: 'active', roles: [rolesString] },
+      type: 'GET', data: { status: 'active', roles: [rolesString] },
       success: function (res) {
         var list = Array.isArray(res) ? res : (res.results || []);
         agentsList = list.map(function (a) {
-          return {
-            email:     a.email || '',
-            firstName: a.firstName || '',
-            lastName:  a.lastName  || '',
-            id:        a.id || a._id || ''
-          };
+          return { email: a.email || '', firstName: a.firstName || '', lastName: a.lastName || '', id: a.id || a._id || '' };
         });
         console.log('Asesores cargados:', agentsList.length);
         var opts = '<option value="">Seleccione un asesor</option>';
@@ -453,43 +501,37 @@
     });
   }
 
-  // ── Step 1 → Step 2: cargar propuestas del asesor ────────────
+  // ── Cargar propuestas ────────────────────────────────────────
   function loadProposals() {
     var email = $('#agent-select').val();
     if (!email) return toast('Selecciona un asesor', 'err');
 
     var agent   = agentsList.find(function (a) { return a.email === email; });
     var agentId = agent ? agent.id : '';
-
     if (!agentId) return toast('No se encontró el ID del asesor', 'err');
 
     $('#btn-load-proposals').prop('disabled', true);
     $('#sp-load').show();
 
-    console.log('🔍 Cargando propuestas de asesor id:', agentId);
+    console.log('Cargando propuestas de asesor id:', agentId);
     api('GET', '/v1/proposal', { createdBy: agentId, limit: 200 },
       function (res) {
         var list = Array.isArray(res) ? res : (res.data || res.results || []);
-        console.log('✅ createdBy=' + agentId + ' →', list.length, 'propuestas');
-        $('#btn-load-proposals').prop('disabled', false);
-        $('#sp-load').hide();
+        console.log('Propuestas recibidas:', list.length);
+        $('#btn-load-proposals').prop('disabled', false); $('#sp-load').hide();
         renderProposalStep(list);
       },
       function (e) {
         console.error('loadProposals error:', e);
         toast('Error ' + e.status + ' al cargar propuestas', 'err');
-        $('#btn-load-proposals').prop('disabled', false);
-        $('#sp-load').hide();
+        $('#btn-load-proposals').prop('disabled', false); $('#sp-load').hide();
       }
     );
   }
 
   function renderProposalStep(all) {
-    // Solo Ready y Draft
-    proposalsList = all.filter(function (p) {
-      return p.status === 'Ready' || p.status === 'Draft';
-    });
-    console.log('Propuestas Ready+Draft:', proposalsList.length, '— todas:', all.length);
+    proposalsList = all.filter(function (p) { return p.status === 'Ready' || p.status === 'Draft'; });
+    console.log('Ready+Draft:', proposalsList.length, '/ total:', all.length);
     $('#proposals-count').text(proposalsList.length + ' propuestas (Ready + Draft)');
 
     var ready = proposalsList.filter(function (p) { return p.status === 'Ready'; });
@@ -497,87 +539,66 @@
 
     var opts = '<option value="">Seleccione una propuesta</option>';
     if (ready.length) {
-      opts += '<optgroup label="✅ Ready (' + ready.length + ')">';
-      ready.forEach(function (p) {
-        opts += '<option value="' + (p.id || p._id) + '">[Ready] ' + (p.title || p.proposalNumber || p.id) + '</option>';
-      });
+      opts += '<optgroup label="Ready (' + ready.length + ')">';
+      ready.forEach(function (p) { opts += '<option value="' + (p.id || p._id) + '">' + (p.title || p.proposalNumber || p.id) + '</option>'; });
       opts += '</optgroup>';
     }
     if (draft.length) {
-      opts += '<optgroup label="📝 Draft (' + draft.length + ')">';
-      draft.forEach(function (p) {
-        opts += '<option value="' + (p.id || p._id) + '">[Draft] ' + (p.title || p.proposalNumber || p.id) + '</option>';
-      });
+      opts += '<optgroup label="Draft (' + draft.length + ')">';
+      draft.forEach(function (p) { opts += '<option value="' + (p.id || p._id) + '">' + (p.title || p.proposalNumber || p.id) + '</option>'; });
       opts += '</optgroup>';
     }
-
     if ($('#proposal-select').data('select2')) $('#proposal-select').select2('destroy');
     $('#proposal-select').html(opts).select2({ width: '100%', placeholder: 'Seleccione una propuesta' });
     $('#proposal-select').on('change', onProposalChange);
-
     goStep(2);
   }
 
   function onProposalChange() {
     var id = $('#proposal-select').val();
-    if (!id) {
-      $('#prop-preview').hide();
-      $('#btn-open-editor').prop('disabled', true);
-      return;
-    }
+    if (!id) { $('#prop-preview').hide(); $('#btn-open-editor').prop('disabled', true); return; }
     var p = proposalsList.find(function (x) { return (x.id || x._id) === id; });
     if (p) {
       $('#prev-title').text(p.title || '(Sin título)');
-      $('#prev-meta').html('N° ' + (p.proposalNumber || '—') + ' &nbsp;|&nbsp; ' + badge(p.status) + (p.relatedUser ? ' &nbsp;|&nbsp; ' + p.relatedUser : ''));
+      $('#prev-meta').html('N° ' + (p.proposalNumber || '—') + ' &nbsp;&middot;&nbsp; ' + badge(p.status));
       $('#prop-preview').show();
     }
     $('#btn-open-editor').prop('disabled', false);
   }
 
-  // ── Step 2 → Step 3: detalle de propuesta ───────────────────
+  // ── Cargar detalle de propuesta ───────────────────────────────
   function loadProposalDetail() {
     var id = $('#proposal-select').val();
     if (!id) return;
-
-    $('#btn-open-editor').prop('disabled', true);
-    $('#sp-detail').show();
+    $('#btn-open-editor').prop('disabled', true); $('#sp-detail').show();
 
     api('GET', '/v1/proposal/' + id, {},
       function (res) {
-        console.log('Detalle propuesta completo:', JSON.stringify(res, null, 2));
+        console.log('Detalle propuesta:', JSON.stringify(res, null, 2));
         currentProposal = res;
         currentProducts = parseProducts(res.products);
-        console.log('Products parseados:', currentProducts);
-
-        renderEditor();
-        goStep(3);
-        $('#btn-open-editor').prop('disabled', false);
-        $('#sp-detail').hide();
+        renderEditor(); goStep(3);
+        $('#btn-open-editor').prop('disabled', false); $('#sp-detail').hide();
       },
       function (e) {
         console.error('loadProposalDetail error:', e);
         toast('Error al cargar detalle: ' + e.status, 'err');
-        $('#btn-open-editor').prop('disabled', false);
-        $('#sp-detail').hide();
+        $('#btn-open-editor').prop('disabled', false); $('#sp-detail').hide();
       }
     );
   }
 
-  // ── Parsear products del detalle (puede ser array, string JSON, objeto) ──
+  // ── Parsear products ──────────────────────────────────────────
   function parseProducts(raw) {
     if (!raw) return [];
     if (Array.isArray(raw)) return raw.map(normProd);
-    if (typeof raw === 'string') {
-      try { return JSON.parse(raw).map(normProd); } catch (e) { return []; }
-    }
+    if (typeof raw === 'string') { try { return JSON.parse(raw).map(normProd); } catch (e) { return []; } }
     if (typeof raw === 'object') return [normProd(raw)];
     return [];
   }
-
   function normProd(p) {
-    var sku = p.id || p.sku || p._id || '';
+    var sku  = p.id || p.sku || p._id || '';
     var name = p.name || '';
-    // Intentar obtener el nombre del catálogo si no viene en la propuesta
     if (!name && productsCatalog.length) {
       var found = productsCatalog.find(function (x) { return x.sku === sku; });
       if (found) name = found.name;
@@ -598,8 +619,7 @@
   function renderProductList() {
     var $list = $('#ed-products');
     if (!currentProducts.length) {
-      $list.html('<div class="prod-empty">No hay productos en esta propuesta.<br>Agrega uno desde el catálogo.</div>');
-      return;
+      $list.html('<div class="prod-empty">Sin productos.<br>Agrega uno desde el catálogo.</div>'); return;
     }
     var html = '<div class="prod-list">';
     currentProducts.forEach(function (prod, i) {
@@ -621,26 +641,19 @@
   }
 
   function removeProduct(idx) {
-    currentProducts.splice(idx, 1);
-    renderProductList();
-    toast('Producto eliminado', 'ok');
+    currentProducts.splice(idx, 1); renderProductList(); toast('Producto eliminado', 'ok');
   }
 
   function addProduct() {
     var sku = $('#add-prod-select').val();
     var qty = Math.max(1, parseInt($('#add-qty').val()) || 1);
     if (!sku) return toast('Selecciona un producto del catálogo', 'err');
-
     var exists = currentProducts.find(function (p) { return p.id === sku; });
-    if (exists) {
-      exists.quantity += qty;
-      renderProductList();
-      toast('Cantidad actualizada (' + exists.quantity + ')', 'ok');
-    } else {
+    if (exists) { exists.quantity += qty; renderProductList(); toast('Cantidad actualizada (' + exists.quantity + ')', 'ok'); }
+    else {
       var cat = productsCatalog.find(function (p) { return p.sku === sku; });
       currentProducts.push({ id: sku, quantity: qty, name: cat ? cat.name : sku });
-      renderProductList();
-      toast('Producto agregado', 'ok');
+      renderProductList(); toast('Producto agregado', 'ok');
     }
     $('#add-prod-select').val('').trigger('change');
     $('#add-qty').val(1);
@@ -650,74 +663,60 @@
   function saveProposal() {
     if (!currentProposal) return;
     var id = currentProposal.id || currentProposal._id;
+    $('#btn-save').prop('disabled', true); $('#btn-save-text').text('Guardando...'); $('#sp-save').show();
+    $('#save-success').hide();
 
-    $('#btn-save').prop('disabled', true);
-    $('#btn-save-text').text('Guardando...');
-    $('#sp-save').show();
-
-    var newStatus = $('#ed-status').val();
-    var productsPayload = currentProducts.map(function (p) {
-      return { id: p.id, quantity: p.quantity };
-    });
-
-    var body = { status: newStatus, products: productsPayload };
+    var newStatus       = $('#ed-status').val();
+    var productsPayload = currentProducts.map(function (p) { return { id: p.id, quantity: p.quantity }; });
+    var body            = { status: newStatus, products: productsPayload };
     console.log('PUT /v1/proposal/' + id, body);
 
-    $.ajax({
-      url: 'https://' + domain + '/v1/proposal/' + id,
-      type: 'PUT',
-      data: JSON.stringify(body),
-      contentType: 'application/json',
-      headers: authHeaders,
-      success: function (res) {
-        console.log('Propuesta actualizada:', res);
-        currentProposal = res;
-        $('#ed-badge').html(badge(newStatus));
-        toast('✅ Propuesta guardada correctamente', 'ok');
-        $('#btn-save').prop('disabled', false);
-        $('#btn-save-text').text('Guardar cambios');
-        $('#sp-save').hide();
-      },
-      error: function (e) {
-        console.error('saveProposal error:', e);
-        // Intentar con products como string JSON (por si la API lo espera así)
-        if (e.status === 400 && typeof body.products !== 'string') {
-          console.log('Reintentando con products como JSON string...');
-          body.products = JSON.stringify(productsPayload);
-          $.ajax({
-            url: 'https://' + domain + '/v1/proposal/' + id,
-            type: 'PUT',
-            data: JSON.stringify(body),
-            contentType: 'application/json',
-            headers: authHeaders,
-            success: function (res2) {
-              console.log('Guardado con products como string:', res2);
-              currentProposal = res2;
-              $('#ed-badge').html(badge(newStatus));
-              toast('✅ Propuesta guardada correctamente', 'ok');
-              $('#btn-save').prop('disabled', false);
-              $('#btn-save-text').text('Guardar cambios');
-              $('#sp-save').hide();
-            },
-            error: function (e2) {
-              console.error('saveProposal retry error:', e2);
-              toast('❌ Error al guardar (' + e2.status + ')', 'err');
-              $('#btn-save').prop('disabled', false);
-              $('#btn-save-text').text('Guardar cambios');
-              $('#sp-save').hide();
-            }
-          });
-        } else {
-          toast('❌ Error al guardar (' + e.status + ')', 'err');
-          $('#btn-save').prop('disabled', false);
-          $('#btn-save-text').text('Guardar cambios');
-          $('#sp-save').hide();
-        }
+    function onSuccess(res) {
+      console.log('Propuesta actualizada:', res);
+      currentProposal = res;
+
+      // URL: intentar campo de respuesta, fallback a URL construida
+      var pid = res.id || res._id || id;
+      propUrl = res.url || res.link || res.shareUrl || res.proposalUrl || ('https://' + domain + '/proposal/' + pid);
+      console.log('URL de propuesta:', propUrl);
+
+      $('#ed-badge').html(badge(newStatus));
+      $('#ss-sub').text('Estado actualizado: ' + newStatus);
+      $('#prop-url-link').attr('href', propUrl).text(propUrl);
+      $('#save-success').fadeIn(250);
+
+      $('#btn-save').prop('disabled', false); $('#btn-save-text').text('Guardar cambios'); $('#sp-save').hide();
+    }
+
+    function onError(e, retry) {
+      console.error('saveProposal error:', e);
+      if (e.status === 400 && retry) {
+        console.log('Reintentando con products como JSON string...');
+        body.products = JSON.stringify(productsPayload);
+        $.ajax({ url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT', data: JSON.stringify(body), contentType: 'application/json', headers: authHeaders, success: onSuccess, error: function (e2) { onError(e2, false); } });
+      } else {
+        toast('Error al guardar (' + e.status + ')', 'err');
+        $('#btn-save').prop('disabled', false); $('#btn-save-text').text('Guardar cambios'); $('#sp-save').hide();
       }
-    });
+    }
+
+    $.ajax({ url: 'https://' + domain + '/v1/proposal/' + id, type: 'PUT', data: JSON.stringify(body), contentType: 'application/json', headers: authHeaders, success: onSuccess, error: function (e) { onError(e, true); } });
   }
 
-  // ── Cargar catálogo de productos ──────────────────────────────
+  // ── URL helpers ───────────────────────────────────────────────
+  function openPropUrl() { if (propUrl) window.open(propUrl, '_blank'); }
+
+  function copyPropUrl() {
+    if (!propUrl) return;
+    var done = function () { $('#btn-copy').text('¡Copiado!'); setTimeout(function () { $('#btn-copy').text('Copiar enlace'); }, 2000); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(propUrl).then(done); }
+    else {
+      var tmp = document.createElement('input'); tmp.value = propUrl;
+      document.body.appendChild(tmp); tmp.select(); document.execCommand('copy'); document.body.removeChild(tmp); done();
+    }
+  }
+
+  // ── Catálogo ──────────────────────────────────────────────────
   function loadCatalog() {
     api('GET', '/v1/product?disabled=false', {},
       function (res) {
@@ -736,12 +735,8 @@
   // ── Init ──────────────────────────────────────────────────────
   $(document).ready(function () {
     goStep(1);
-
     $('#agent-select').select2({ width: '100%', placeholder: 'Cargando asesores...' });
-    $('#agent-select').on('change', function () {
-      $('#btn-load-proposals').prop('disabled', !$(this).val());
-    });
-
+    $('#agent-select').on('change', function () { $('#btn-load-proposals').prop('disabled', !$(this).val()); });
     loadAgents();
     loadCatalog();
   });
