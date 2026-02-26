@@ -26,36 +26,45 @@
   box-sizing: inherit;
 }
 
-/* ── Layout split ──────────────────────────────────────────── */
+/* ── Layout ────────────────────────────────────────────────── */
 #bot-customer-design .bot-wrapper {
-  display: flex;
+  position: relative;
   min-height: 100vh;
-  /* la imagen va en el wrapper para que siempre sea visible */
+  width: 100%;
+}
+
+/* imagen de fondo — capa base absoluta, siempre visible */
+#bot-customer-design .bot-bg {
+  position: absolute;
+  inset: 0;
   background-color: #060608;
   background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
   background-size: cover;
   background-position: center center;
+  z-index: 0;
 }
 
-/* spacer transparente que "deja ver" la imagen de fondo */
-#bot-customer-design .bot-spacer {
-  flex: 1;
-  min-height: 100vh;
+#bot-customer-design .bot-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.1) 40%, rgba(9,9,14,0.8) 100%);
 }
 
-/* ── Panel derecho ─────────────────────────────────────────── */
+/* ── Panel derecho — flota sobre la imagen ─────────────────── */
 #bot-customer-design .bot-panel {
+  position: relative;
+  z-index: 1;
   width: 460px;
-  min-width: 460px;
+  max-width: 100%;
   min-height: 100vh;
+  margin-left: auto;
   background: var(--panel);
   padding: 48px 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow-y: auto;
-  position: relative;
-  z-index: 1;
 }
 
 /* ── Título ────────────────────────────────────────────────── */
@@ -356,18 +365,14 @@
 #bot-customer-design #product-container { display: none; }
 
 /* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 780px) {
-  #bot-customer-design .bot-wrapper {
-    flex-direction: column;
-    background-position: top center;
-  }
-  #bot-customer-design .bot-spacer { min-height: 200px; flex: none; }
+@media (max-width: 600px) {
   #bot-customer-design .bot-panel {
-    width: 100%; min-width: unset;
-    padding: 32px 24px;
-    min-height: unset;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    padding: 32px 20px;
   }
-  #bot-customer-design .panel-title { font-size: 1.45rem; }
+  #bot-customer-design .panel-title { font-size: 1.35rem; }
   #bot-customer-design .row-2 { grid-template-columns: 1fr; }
 }
 </style>
@@ -375,8 +380,8 @@
 <!-- HTML -->
 <div class="bot-wrapper">
 
-  <!-- Spacer izquierdo — deja ver la imagen de fondo del wrapper -->
-  <div class="bot-spacer"></div>
+  <!-- Imagen de fondo — capa absoluta detrás del panel -->
+  <div class="bot-bg"></div>
 
   <!-- Panel derecho -->
   <div class="bot-panel">
