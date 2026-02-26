@@ -882,11 +882,25 @@
     $('#fl-create-status').val('Draft');
     $('#fl-create-success').hide();
     if ($('#fl-create-add-prod').data('select2')) $('#fl-create-add-prod').select2('destroy');
-    var opts = '<option value="">Buscar en catálogo...</option>';
-    _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
-      opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
-    });
-    $('#fl-create-add-prod').html(opts).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+    var buildCreateOpts = function () {
+      var opts = '<option value="">Buscar en catálogo...</option>';
+      _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
+        opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
+      });
+      return opts;
+    };
+    if (flProductsCatalog.length) {
+      $('#fl-create-add-prod').html(buildCreateOpts()).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+    } else {
+      $('#fl-create-add-prod').html('<option value="">Cargando catálogo...</option>').select2({ width: '100%', placeholder: 'Cargando...' });
+      var waitCreate = setInterval(function () {
+        if (flProductsCatalog.length) {
+          clearInterval(waitCreate);
+          $('#fl-create-add-prod').html(buildCreateOpts()).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+          console.log('[CREATE] Catálogo listo:', flProductsCatalog.length);
+        }
+      }, 500);
+    }
   }
 
   function flGoSearch() {
@@ -901,9 +915,10 @@
     $('#fl-agent-select').on('change', function () {
       $('#fl-btn-load').prop('disabled', !$(this).val());
     });
-    if (flCurrentUser && flCurrentUser.email) {
-      var match = flAgentsList.find(function (a) { return a.email === flCurrentUser.email; });
-      if (match) $('#fl-agent-select').val(match.email).trigger('change');
+    if (flCurrentUser) {
+      var myEmail = (flCurrentUser.email || flCurrentUser._loginEmail || '').toLowerCase();
+      var match = flAgentsList.find(function (a) { return a.email && a.email.toLowerCase() === myEmail; });
+      if (match) { $('#fl-agent-select').val(match.email).trigger('change'); console.log('[SEARCH] auto-select:', match.email); }
     }
   }
 
@@ -929,8 +944,15 @@
         console.log('[LOGIN] ✅ Response:', JSON.stringify(res, null, 2));
         var data      = res.data || res;
         flToken       = data.token || data.accessToken || data.access_token || data.jwt || '';
-        flCurrentUser = data.user || data.userData || data.profile || { email: email, firstName: email.split('@')[0] };
+        flCurrentUser = data.user || data.userData || data.profile || {};
+        // Garantizar que siempre tengamos el email (el campo 'email' del login)
+        if (!flCurrentUser.email) flCurrentUser.email = email;
+        flCurrentUser._loginEmail = email; // el que escribió el usuario
+        // Guardar ID directo del usuario si viene en la respuesta (para createdBy)
+        flCurrentUser._userId = flCurrentUser.id || flCurrentUser._id || '';
+        if (!flCurrentUser.firstName) flCurrentUser.firstName = email.split('@')[0];
         console.log('[LOGIN] token:', flToken);
+        console.log('[LOGIN] user email:', flCurrentUser.email, '| userId:', flCurrentUser._userId);
 
         if (!flToken) {
           flShowLoginErr('No se recibió token. Revisa F12.');
@@ -1015,25 +1037,48 @@
     $('#fl-my-list').html('<div class="ped-loading"><div class="sp-accent"></div> Cargando...</div>');
 
     var tryLoad = function (attempts) {
-      var myAgent = flAgentsList.find(function (a) { return a.email === (flCurrentUser && flCurrentUser.email); });
-      if (!myAgent && attempts < 8) {
-        setTimeout(function () { tryLoad(attempts + 1); }, 600); return;
+      // 1) Intentar usar el userId directo del login response
+      var myId = flCurrentUser && flCurrentUser._userId;
+
+      // 2) Si no hay userId directo, buscar en la lista de agentes por email (case-insensitive)
+      if (!myId) {
+        var myEmail = (flCurrentUser && (flCurrentUser.email || flCurrentUser._loginEmail) || '').toLowerCase();
+        var myAgent = flAgentsList.find(function (a) {
+          return a.email && a.email.toLowerCase() === myEmail;
+        });
+        myId = myAgent ? myAgent.id : '';
       }
-      if (!myAgent) {
-        $('#fl-my-list').html('<div class="prop-empty">Tu usuario no aparece en la lista de asesores.</div>'); return;
+
+      // 3) Si todavía no hay ID y los agentes aún no cargaron, reintentar
+      if (!myId && attempts < 10) {
+        console.log('[MY-PROPOSALS] Esperando agentes... intento', attempts + 1);
+        setTimeout(function () { tryLoad(attempts + 1); }, 700);
+        return;
       }
-      flApi('GET', '/v1/proposal', { createdBy: myAgent.id, limit: 200 },
+
+      if (!myId) {
+        console.warn('[MY-PROPOSALS] No se encontró agentId. User:', flCurrentUser);
+        $('#fl-my-list').html(
+          '<div class="prop-empty">No se encontró tu usuario en la lista de asesores.<br>' +
+          'Email buscado: ' + (flCurrentUser && flCurrentUser.email || '—') + '</div>'
+        );
+        return;
+      }
+
+      console.log('[MY-PROPOSALS] createdBy:', myId);
+      flApi('GET', '/v1/proposal', { createdBy: myId, limit: 200 },
         function (res) {
           var list = Array.isArray(res) ? res : (res.data || res.results || []);
           flMyProposalsList = list;
-          console.log('Mis propuestas:', list.length);
+          console.log('[MY-PROPOSALS] propuestas:', list.length);
           $('#view-my-proposals .filter-btn').removeClass('active');
           $('#view-my-proposals .filter-btn[data-status="all"]').addClass('active');
           flRenderPropCards(flMyProposalsList, '#fl-my-list');
         },
         function (e) {
+          console.error('[MY-PROPOSALS] Error:', e.status, e.responseText);
           flToast('Error ' + e.status + ' al cargar propuestas', 'err');
-          $('#fl-my-list').html('<div class="prop-empty">No se pudieron cargar las propuestas.</div>');
+          $('#fl-my-list').html('<div class="prop-empty">Error al cargar propuestas (' + e.status + ').</div>');
         }
       );
     };
@@ -1123,22 +1168,41 @@
 
     flApi('GET', '/v1/proposal/' + id, {},
       function (res) {
-        console.log('Detalle:', JSON.stringify(res, null, 2));
+        console.log('[EDITOR] Detalle:', JSON.stringify(res, null, 2));
         flCurrentProposal = res;
         flCurrentProducts = flParseProducts(res.products);
         flRenderEditor();
-        if ($('#fl-add-prod').data('select2')) $('#fl-add-prod').select2('destroy');
-        var opts = '<option value="">Buscar en catálogo...</option>';
-        _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
-          opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
-        });
-        $('#fl-add-prod').html(opts).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+        flInitEditorCatalog();
       },
       function (e) {
+        console.error('[EDITOR] Error detalle:', e.status, e.responseText);
         flToast('Error al cargar propuesta: ' + e.status, 'err');
         flGoHome();
       }
     );
+  }
+
+  function flInitEditorCatalog() {
+    if ($('#fl-add-prod').data('select2')) $('#fl-add-prod').select2('destroy');
+    var buildOpts = function () {
+      var opts = '<option value="">Buscar en catálogo...</option>';
+      _.sortBy(flProductsCatalog, 'name').forEach(function (p) {
+        opts += '<option value="' + p.sku + '">' + p.name + ' (' + p.sku + ')</option>';
+      });
+      return opts;
+    };
+    if (flProductsCatalog.length) {
+      $('#fl-add-prod').html(buildOpts()).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+    } else {
+      // Catálogo aún cargando — reintentar
+      var wait = setInterval(function () {
+        if (flProductsCatalog.length) {
+          clearInterval(wait);
+          $('#fl-add-prod').html(buildOpts()).select2({ width: '100%', placeholder: 'Buscar en catálogo...' });
+          console.log('[EDITOR] Catálogo listo:', flProductsCatalog.length);
+        }
+      }, 500);
+    }
   }
 
   // ── PRODUCTOS ────────────────────────────────────────────────────
@@ -1379,13 +1443,23 @@
 
   // ── CATÁLOGO ─────────────────────────────────────────────────────
   function flLoadCatalog() {
-    flApi('GET', '/v1/product?disabled=false', {},
-      function (res) {
+    var url     = 'https://' + domain + '/v1/product?disabled=false';
+    var headers = { Authorization: 'Bearer ' + flToken };
+    $.ajax({
+      url: url, type: 'GET', headers: headers,
+      success: function (res) {
         var items = res.data || res || [];
-        flProductsCatalog = items.map(function (p) { return { sku: p.sku, name: p.name }; });
-        console.log('Catálogo:', flProductsCatalog.length, 'productos');
+        if (!Array.isArray(items)) items = [];
+        // Solo productos con sku y nombre
+        flProductsCatalog = items
+          .filter(function (p) { return p.sku && p.name; })
+          .map(function (p) { return { sku: p.sku, name: p.name }; });
+        console.log('[CATALOG] productos:', flProductsCatalog.length);
+      },
+      error: function (e) {
+        console.error('[CATALOG] Error:', e.status, e.responseText);
       }
-    );
+    });
   }
 
   // ── INIT ─────────────────────────────────────────────────────────
