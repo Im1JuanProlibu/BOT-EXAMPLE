@@ -217,13 +217,15 @@
   background: var(--input-bg);
   border: 1px solid var(--input-bd);
   border-radius: 8px;
-  padding: 10px 14px;
+  padding: 8px 14px 8px 8px;
 }
 
 #bot-customer-design .captcha-wrap iframe {
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: 6px;
   border: none;
+  background: #ffffff;
+  display: block;
 }
 
 #bot-customer-design .captcha-wrap input {
@@ -598,7 +600,7 @@ $(document).ready(function () {
 
   $('#model').select2({ width: '100%' });
 
-  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
+  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=black&noise=2&size=4');
 
   loadAgents();
   loadProducts();
