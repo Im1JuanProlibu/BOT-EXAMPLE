@@ -335,8 +335,8 @@
         <div class="login-err" id="login-err"></div>
 
         <div class="field">
-          <label for="login-email">Correo electrónico</label>
-          <input type="email" id="login-email" placeholder="correo@fanalca.com" autocomplete="username">
+          <label for="login-email">Usuario</label>
+          <input type="text" id="login-email" placeholder="usuario@dominio.com" autocomplete="username">
         </div>
         <div class="field">
           <label for="login-password">Contraseña</label>
@@ -503,7 +503,7 @@
   // ── Config ───────────────────────────────────────────────────
   var domain      = 'customer-design.prolibu.com';
   var rolesString = 'agent';
-  var apiKey      = '9fa81136-34db-495e-81e5-ef1c77bcb4d4'; // access token requerido por el endpoint de login
+  var apiKey      = '56a69869-bf0a-4650-98e9-fcd9680b31d5'; // accessToken requerido en el body del login
 
   // ── Estado de sesión ─────────────────────────────────────────
   var flToken       = '';
@@ -544,14 +544,13 @@
     $('#sp-login').show();
     $('#login-err').hide();
 
-    var loginBody = { email: email, password: password };
+    var loginBody = { username: email, password: password, accessToken: apiKey };
     console.log('[LOGIN] POST /v1/user/login — body:', loginBody);
 
     $.ajax({
       url: 'https://' + domain + '/v1/user/login',
       type: 'POST',
       contentType: 'application/json',
-      headers: { Authorization: 'Bearer ' + apiKey },
       data: JSON.stringify(loginBody),
       success: function (res) {
         console.log('[LOGIN] ✅ Response completo:', JSON.stringify(res, null, 2));
