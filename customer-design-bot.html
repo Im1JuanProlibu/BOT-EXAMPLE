@@ -5,146 +5,449 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  #bot-customer-design {
-    --color-acento: #1e1e2e;
-    font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
-  }
+/* ── Reset y variables ─────────────────────────────────────── */
+#bot-customer-design {
+  --dark:        #0f172a;
+  --dark-mid:    #1e293b;
+  --dark-soft:   #334155;
+  --accent:      #f1f5f9;
+  --input-bg:    #f8fafc;
+  --input-bd:    #e2e8f0;
+  --input-focus: #0f172a;
+  --text:        #1e293b;
+  --text-soft:   #64748b;
+  --white:       #ffffff;
+  --radius:      10px;
+  --shadow:      0 20px 60px rgba(0,0,0,0.5);
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
 
-  #bot-customer-design *,
-  #bot-customer-design *::before,
-  #bot-customer-design *::after {
-    box-sizing: inherit;
-  }
+#bot-customer-design *,
+#bot-customer-design *::before,
+#bot-customer-design *::after { box-sizing: inherit; }
 
-  #bot-customer-design .bot-wrapper {
-    min-height: 100vh;
-    background-color: #111;
-    background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
-    background-size: cover;
-    background-position: center center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+/* ── Fondo ─────────────────────────────────────────────────── */
+#bot-customer-design .bot-wrapper {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  background-image:
+    linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(15,23,42,0.65) 100%),
+    url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
 
-  #bot-customer-design .bot-card {
-    background: rgba(255, 255, 255, 0.97);
-    border-radius: 14px;
-    padding: 36px 40px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
-  }
+/* ── Tarjeta ───────────────────────────────────────────────── */
+#bot-customer-design .bot-card {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow), 0 0 0 1px rgba(255,255,255,0.06);
+  animation: slideUp 0.5s ease both;
+}
 
-  #bot-customer-design .bot-card h2 {
-    text-align: center;
-    color: var(--color-acento);
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin: 0 0 24px;
-    letter-spacing: 0.3px;
-  }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  #bot-customer-design .form-group {
-    margin-bottom: 14px;
-  }
+/* ── Header de la tarjeta ──────────────────────────────────── */
+#bot-customer-design .card-header {
+  background: var(--dark);
+  padding: 28px 36px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
 
-  #bot-customer-design label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #444;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
+#bot-customer-design .card-header::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  pointer-events: none;
+}
 
-  #bot-customer-design input[type="text"],
-  #bot-customer-design input[type="email"],
-  #bot-customer-design input[type="tel"] {
-    width: 100%;
-    border: 1px solid #d0d0d0;
-    border-radius: 7px;
-    padding: 10px 13px;
-    font-size: 0.92rem;
-    font-family: 'Roboto', sans-serif;
-    transition: border-color 0.2s;
-    outline: none;
-    color: #222;
-  }
+#bot-customer-design .card-header::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; left: -30px;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  pointer-events: none;
+}
 
-  #bot-customer-design input[type="text"]:focus,
-  #bot-customer-design input[type="email"]:focus,
-  #bot-customer-design input[type="tel"]:focus {
-    border-color: var(--color-acento);
-  }
+#bot-customer-design .header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #cbd5e1;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
 
-  #bot-customer-design .iti { width: 100%; }
+#bot-customer-design .header-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  animation: pulse 2s infinite;
+}
 
-  #bot-customer-design .captcha-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
 
-  #bot-customer-design .captcha-row iframe {
-    flex-shrink: 0;
-    border: 1px solid #d0d0d0;
-    border-radius: 7px;
-  }
+#bot-customer-design .card-header h2 {
+  color: var(--white);
+  font-size: 1.55rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
 
-  #bot-customer-design .captcha-row input { flex: 1; }
+#bot-customer-design .card-header p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 400;
+}
 
-  #bot-customer-design .checkboxes { margin: 14px 0 20px; }
+/* ── Cuerpo del formulario ─────────────────────────────────── */
+#bot-customer-design .card-body {
+  background: var(--white);
+  padding: 28px 36px 32px;
+}
 
-  #bot-customer-design .check-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    font-size: 0.76rem;
-    font-weight: 400;
-    color: #555;
-    margin-bottom: 8px;
-    cursor: pointer;
-    line-height: 1.4;
-  }
+/* ── Fila de dos columnas ──────────────────────────────────── */
+#bot-customer-design .row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
 
-  #bot-customer-design .check-label input[type="checkbox"] {
-    margin-top: 2px;
-    flex-shrink: 0;
-    accent-color: var(--color-acento);
-  }
+/* ── Grupos de campo ───────────────────────────────────────── */
+#bot-customer-design .form-group {
+  margin-bottom: 14px;
+}
 
-  #bot-customer-design .btn-submit {
-    width: 100%;
-    padding: 14px;
-    background: var(--color-acento);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.97rem;
-    font-weight: 700;
-    font-family: 'Roboto', sans-serif;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
+#bot-customer-design .form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
 
-  #bot-customer-design .btn-submit:hover    { opacity: 0.85; }
-  #bot-customer-design .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+/* ── Inputs ────────────────────────────────────────────────── */
+#bot-customer-design input[type="text"],
+#bot-customer-design input[type="email"],
+#bot-customer-design input[type="tel"] {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-bd);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+}
 
-  #bot-customer-design .select2-container  { width: 100% !important; }
-  #bot-customer-design #product-container  { display: none; }
+#bot-customer-design input[type="text"]:focus,
+#bot-customer-design input[type="email"]:focus,
+#bot-customer-design input[type="tel"]:focus {
+  border-color: var(--input-focus);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(15,23,42,0.08);
+}
 
-  @media (max-width: 540px) {
-    #bot-customer-design .bot-card { padding: 24px 18px; }
-  }
+#bot-customer-design input::placeholder { color: #b0bec5; }
+
+/* ── intl-tel-input ────────────────────────────────────────── */
+#bot-customer-design .iti { width: 100%; }
+#bot-customer-design .iti__flag-container { z-index: 10; }
+
+/* ── Select2 customizado ───────────────────────────────────── */
+#bot-customer-design .select2-container { width: 100% !important; }
+
+#bot-customer-design .select2-container--default .select2-selection--single {
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-bd);
+  border-radius: var(--radius);
+  height: 42px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#bot-customer-design .select2-container--default.select2-container--open .select2-selection--single,
+#bot-customer-design .select2-container--default.select2-container--focus .select2-selection--single {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(15,23,42,0.08);
+  outline: none;
+}
+
+#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: var(--text);
+  line-height: 40px;
+  padding-left: 14px;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+}
+
+#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__placeholder {
+  color: #b0bec5;
+}
+
+#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 40px;
+  right: 10px;
+}
+
+#bot-customer-design .select2-dropdown {
+  border: 1.5px solid var(--input-bd);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+}
+
+#bot-customer-design .select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background: var(--dark);
+}
+
+/* ── Separador con label ───────────────────────────────────── */
+#bot-customer-design .divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 16px;
+}
+
+#bot-customer-design .divider::before,
+#bot-customer-design .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--input-bd);
+}
+
+#bot-customer-design .divider span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+}
+
+/* ── Captcha ───────────────────────────────────────────────── */
+#bot-customer-design .captcha-wrap {
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-bd);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+#bot-customer-design .captcha-wrap iframe {
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: none;
+}
+
+#bot-customer-design .captcha-wrap input {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1.5px solid var(--input-bd) !important;
+  border-radius: 0 !important;
+  padding: 4px 0 !important;
+  font-size: 0.9rem !important;
+  box-shadow: none !important;
+}
+
+#bot-customer-design .captcha-wrap input:focus {
+  border-bottom-color: var(--input-focus) !important;
+  box-shadow: none !important;
+}
+
+/* ── Checkboxes custom ─────────────────────────────────────── */
+#bot-customer-design .checkboxes {
+  margin: 16px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#bot-customer-design .check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+#bot-customer-design .check-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  border: 1.5px solid var(--input-bd);
+  border-radius: 4px;
+  background: var(--input-bg);
+  cursor: pointer;
+  margin-top: 1px;
+  transition: all 0.15s;
+  position: relative;
+}
+
+#bot-customer-design .check-label input[type="checkbox"]:checked {
+  background: var(--dark);
+  border-color: var(--dark);
+}
+
+#bot-customer-design .check-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 4px;
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+#bot-customer-design .check-label span {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+#bot-customer-design .check-label span b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── Botón submit ──────────────────────────────────────────── */
+#bot-customer-design .btn-submit {
+  width: 100%;
+  padding: 15px 20px;
+  background: var(--dark);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+#bot-customer-design .btn-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+#bot-customer-design .btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(15,23,42,0.35);
+}
+
+#bot-customer-design .btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+#bot-customer-design .btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+#bot-customer-design .btn-arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+#bot-customer-design .btn-submit:hover:not(:disabled) .btn-arrow {
+  transform: translateX(3px);
+}
+
+/* ── Spinner ───────────────────────────────────────────────── */
+#bot-customer-design .spinner {
+  display: none;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Ocultar contenedores hasta que carguen ────────────────── */
+#bot-customer-design #product-container { display: none; }
+
+/* ── Footer de la tarjeta ──────────────────────────────────── */
+#bot-customer-design .card-footer {
+  background: var(--input-bg);
+  border-top: 1px solid var(--input-bd);
+  padding: 10px 36px;
+  text-align: center;
+}
+
+#bot-customer-design .card-footer p {
+  font-size: 0.7rem;
+  color: #b0bec5;
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  #bot-customer-design .card-header,
+  #bot-customer-design .card-body,
+  #bot-customer-design .card-footer { padding-left: 20px; padding-right: 20px; }
+  #bot-customer-design .row-2 { grid-template-columns: 1fr; gap: 0; }
+  #bot-customer-design .card-header h2 { font-size: 1.3rem; }
+}
 </style>
 
 <!-- ══════════════════════════════════════════════════════════ -->
@@ -153,69 +456,89 @@
 <div class="bot-wrapper">
   <div class="bot-card">
 
-    <h2>Solicita tu cotización</h2>
+    <!-- Header -->
+    <div class="card-header">
+      <div class="header-badge">Respuesta inmediata</div>
+      <h2>Solicita tu cotización</h2>
+      <p>Completa el formulario y recibe tu propuesta en WhatsApp</p>
+    </div>
 
-    <form id="cotizacion-form" onsubmit="return false;">
+    <!-- Body -->
+    <div class="card-body">
+      <form id="cotizacion-form" onsubmit="return false;">
 
-      <!-- Producto — se muestra cuando productsList carga -->
-      <div class="form-group" id="product-container">
-        <label for="model">Producto</label>
-        <select id="model" name="model">
-          <option value="">Selecciona un producto...</option>
-        </select>
-      </div>
-
-      <!-- Nombre -->
-      <div class="form-group">
-        <label for="firstName">Nombre</label>
-        <input type="text" id="firstName" placeholder="Tu nombre" required>
-      </div>
-
-      <!-- Apellido -->
-      <div class="form-group">
-        <label for="lastName">Apellido</label>
-        <input type="text" id="lastName" placeholder="Tu apellido" required>
-      </div>
-
-      <!-- Celular -->
-      <div class="form-group">
-        <label for="phone">Celular</label>
-        <input type="tel" id="phone" placeholder="Número de celular">
-      </div>
-
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">Correo electrónico</label>
-        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
-      </div>
-
-      <!-- Captcha -->
-      <div class="form-group">
-        <label>Código de verificación</label>
-        <div class="captcha-row">
-          <iframe id="captcha-frame" width="130" height="50" scrolling="no"></iframe>
-          <input type="text" id="confirmationCode" placeholder="Ingresa el código" required>
+        <!-- Producto -->
+        <div class="form-group" id="product-container">
+          <label for="model">Producto</label>
+          <select id="model" name="model">
+            <option value="">Selecciona un producto...</option>
+          </select>
         </div>
-      </div>
 
-      <!-- Checkboxes -->
-      <div class="checkboxes">
-        <label class="check-label">
-          <input type="checkbox" id="authorization" required>
-          Autorizo el tratamiento de mis datos personales según la política de privacidad.
-        </label>
-        <label class="check-label">
-          <input type="checkbox" id="promotions">
-          Deseo recibir información sobre productos y promociones.
-        </label>
-      </div>
+        <div class="divider"><span>Tus datos</span></div>
 
-      <!-- Submit -->
-      <button type="submit" class="btn-submit" id="btn-submit" onclick="submitForm(event)">
-        Cotizar ahora
-      </button>
+        <!-- Nombre + Apellido en dos columnas -->
+        <div class="row-2">
+          <div class="form-group">
+            <label for="firstName">Nombre</label>
+            <input type="text" id="firstName" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Apellido</label>
+            <input type="text" id="lastName" placeholder="Tu apellido" required>
+          </div>
+        </div>
 
-    </form>
+        <!-- Celular -->
+        <div class="form-group">
+          <label for="phone">Celular</label>
+          <input type="tel" id="phone" placeholder="Número de celular">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+        </div>
+
+        <div class="divider"><span>Verificación</span></div>
+
+        <!-- Captcha -->
+        <div class="form-group">
+          <label>Código de seguridad</label>
+          <div class="captcha-wrap">
+            <iframe id="captcha-frame" width="120" height="44" scrolling="no"></iframe>
+            <input type="text" id="confirmationCode" placeholder="Escribe el código" required>
+          </div>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="checkboxes">
+          <label class="check-label">
+            <input type="checkbox" id="authorization" required>
+            <span>Acepto el <b>tratamiento de datos personales</b> según la política de privacidad.</span>
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="promotions">
+            <span>Deseo recibir información sobre productos y promociones.</span>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-submit" id="btn-submit" onclick="submitForm(event)">
+          <span id="btn-text">Cotizar ahora</span>
+          <span class="btn-arrow" id="btn-arrow">→</span>
+          <span class="spinner" id="btn-spinner"></span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <p>Tus datos están protegidos y no serán compartidos con terceros.</p>
+    </div>
+
   </div>
 </div>
 
@@ -256,10 +579,7 @@ var iti;
 
 function fetchData(url, method, params, headers, successCallback, errorCallback) {
   $.ajax({
-    url:     url,
-    type:    method,
-    data:    params,
-    headers: headers,
+    url: url, type: method, data: params, headers: headers,
     success: function (res) { successCallback(res); },
     error:   function (err) { errorCallback(err); }
   });
@@ -281,15 +601,10 @@ function loadProducts() {
   fetchData(url, 'GET', {}, headers, function (res) {
     var items = res.data || res || [];
     productsList = items.map(function (p) {
-      return {
-        sku:      p.sku,
-        name:     p.name,
-        disabled: p.disabled
-      };
+      return { sku: p.sku, name: p.name, disabled: p.disabled };
     });
     console.log('productsList:', productsList.length, 'items');
-    $('#model').html(getModelOptions());
-    $('#model').trigger('change');
+    $('#model').html(getModelOptions()).trigger('change');
     $('#product-container').show();
   }, function (err) {
     console.error('Error loadProducts:', err);
@@ -306,13 +621,26 @@ function getModelOptions() {
 }
 
 function getProductsBy(key, values) {
-  return productsList.filter(function (p) {
-    return values.indexOf(p[key]) !== -1;
-  });
+  return productsList.filter(function (p) { return values.indexOf(p[key]) !== -1; });
 }
 
 function updateFullPhoneNumber() {
   if (iti) fullPhoneNumber = iti.getNumber();
+}
+
+function setLoading(loading) {
+  var $btn = $('#btn-submit');
+  if (loading) {
+    $btn.prop('disabled', true);
+    $('#btn-text').text('Enviando...');
+    $('#btn-arrow').hide();
+    $('#btn-spinner').css('display', 'inline-block');
+  } else {
+    $btn.prop('disabled', false);
+    $('#btn-text').text('Cotizar ahora');
+    $('#btn-arrow').show();
+    $('#btn-spinner').hide();
+  }
 }
 
 function submitForm(e) {
@@ -321,13 +649,13 @@ function submitForm(e) {
     alert('Debes aceptar la autorización de datos para continuar.');
     return;
   }
-  $('#btn-submit').prop('disabled', true).text('Enviando...');
+  setLoading(true);
   var code = $('#confirmationCode').val();
   nodriza.config({ domain: domain });
   nodriza.api.confirmationCode.confirm({ code: code }, function (err, res) {
     if (err || !res || !res.hash) {
       alert('Código de verificación incorrecto. Intenta de nuevo.');
-      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      setLoading(false);
       return;
     }
     createProposal(res.hash);
@@ -336,10 +664,7 @@ function submitForm(e) {
 
 function createProposal(hash) {
   updateFullPhoneNumber();
-
-  // Asesor automático: primer agente de la lista
-  var agentEmail = agentsList.length > 0 ? agentsList[0].email : '';
-
+  var agentEmail   = agentsList.length > 0 ? agentsList[0].email : '';
   var selectedSku  = $('#model').val();
   var selectedProd = getProductsBy('sku', [selectedSku]);
   var firstName    = $('#firstName').val().trim();
@@ -359,11 +684,8 @@ function createProposal(hash) {
       products: [{ id: selectedSku, quantity: 1 }],
       status:   'Ready',
       currency: currency,
-      metadata: {
-        webhook:          useWebhookHubspot,
-        customAttributes: customAttributes
-      },
-      dic: { hash: hash }
+      metadata: { webhook: useWebhookHubspot, customAttributes: customAttributes },
+      dic:      { hash: hash }
     },
     emailClient:        true,
     emailAgent:         true,
@@ -375,12 +697,10 @@ function createProposal(hash) {
     if (err) {
       console.error('Error createProposal:', err);
       alert('Ocurrió un error al generar la cotización. Intenta de nuevo.');
-      $('#btn-submit').prop('disabled', false).text('Cotizar ahora');
+      setLoading(false);
       return;
     }
-    if (res && res.url) {
-      window.location.href = res.url;
-    }
+    if (res && res.url) window.location.href = res.url;
   });
 }
 
@@ -402,9 +722,7 @@ $(document).ready(function () {
   loadAgents();
   loadProducts();
 
-  $('#phone').on('input change', function () {
-    updateFullPhoneNumber();
-  });
+  $('#phone').on('input change', function () { updateFullPhoneNumber(); });
 
 });
 </script>
