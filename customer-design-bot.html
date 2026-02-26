@@ -6,379 +6,440 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-/* ── Variables ─────────────────────────────────────────────── */
-#bot-customer-design {
-  --orange:      #a855f7;
-  --orange-deep: #9333ea;
-  --panel:       #09090e;
-  --panel-soft:  #111118;
-  --input-bg:    #16161f;
-  --input-bd:    #2a2a38;
-  --input-focus: #a855f7;
-  --label:       #a855f7;
-  --text:        #f1f5f9;
-  --text-soft:   #8892a4;
-  --white:       #ffffff;
-  font-family: 'Inter', sans-serif;
-  box-sizing: border-box;
-}
-#bot-customer-design *, #bot-customer-design *::before, #bot-customer-design *::after {
-  box-sizing: inherit;
-}
+  /* ── Variables ─────────────────────────────────────────────── */
+  #bot-customer-design {
+    --orange: #a855f7;
+    --orange-deep: #9333ea;
+    --panel: #09090e;
+    --panel-soft: #111118;
+    --input-bg: #16161f;
+    --input-bd: #2a2a38;
+    --input-focus: #a855f7;
+    --label: #a855f7;
+    --text: #f1f5f9;
+    --text-soft: #8892a4;
+    --white: #ffffff;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+  }
 
-/* ── Layout ────────────────────────────────────────────────── */
-#bot-customer-design .bot-wrapper {
-  position: relative;
-  min-height: 100vh;
-  width: 100%;
-}
+  #bot-customer-design *,
+  #bot-customer-design *::before,
+  #bot-customer-design *::after {
+    box-sizing: inherit;
+  }
 
-/* imagen de fondo — capa base absoluta, siempre visible */
-#bot-customer-design .bot-bg {
-  position: absolute;
-  inset: 0;
-  background-color: #060608;
-  background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
-  background-size: cover;
-  background-position: center center;
-  z-index: 0;
-}
-
-#bot-customer-design .bot-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.1) 40%, rgba(9,9,14,0.8) 100%);
-}
-
-/* ── Panel derecho — flota sobre la imagen ─────────────────── */
-#bot-customer-design .bot-panel {
-  position: relative;
-  z-index: 1;
-  width: 460px;
-  max-width: 100%;
-  min-height: 100vh;
-  margin-left: auto;
-  background: var(--panel);
-  padding: 48px 44px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow-y: auto;
-}
-
-/* ── Título ────────────────────────────────────────────────── */
-#bot-customer-design .panel-title {
-  color: var(--white);
-  font-size: 1.85rem;
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: -0.5px;
-  text-transform: uppercase;
-  margin: 0 0 10px;
-}
-
-#bot-customer-design .panel-title-line {
-  width: 48px;
-  height: 3px;
-  background: var(--orange);
-  border-radius: 2px;
-  margin-bottom: 28px;
-}
-
-/* ── Sección label (naranja, uppercase) ────────────────────── */
-#bot-customer-design .section-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--label);
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-#bot-customer-design .section-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--input-bd);
-}
-
-/* ── Grupos de campo ───────────────────────────────────────── */
-#bot-customer-design .form-group { margin-bottom: 10px; }
-
-#bot-customer-design .row-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-/* ── Inputs ────────────────────────────────────────────────── */
-#bot-customer-design input[type="text"],
-#bot-customer-design input[type="email"],
-#bot-customer-design input[type="tel"] {
-  width: 100%;
-  background: var(--input-bg);
-  border: 1px solid var(--input-bd);
-  border-radius: 8px;
-  padding: 12px 14px;
-  font-size: 0.88rem;
-  font-family: 'Inter', sans-serif;
-  color: var(--text);
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-
-#bot-customer-design input[type="text"]:focus,
-#bot-customer-design input[type="email"]:focus,
-#bot-customer-design input[type="tel"]:focus {
-  border-color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
-}
-
-#bot-customer-design input::placeholder { color: #5a5a72; }
-
-/* ── intl-tel-input dark ───────────────────────────────────── */
-#bot-customer-design .iti {
-  width: 100% !important;
-  display: block !important;
-}
-
-#bot-customer-design .iti input[type="tel"] {
-  padding-left: 54px !important;
-}
-
-#bot-customer-design .iti__selected-flag {
-  background: var(--input-bg) !important;
-  border-right: 1px solid var(--input-bd);
-  border-radius: 8px 0 0 8px;
-}
-
-#bot-customer-design .iti__country-list {
-  background: #1a1a26;
-  border: 1px solid var(--input-bd);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-  color: var(--text);
-  z-index: 9999;
-}
-
-#bot-customer-design .iti__country { padding: 8px 12px; color: var(--text); }
-#bot-customer-design .iti__country.iti__highlight,
-#bot-customer-design .iti__country:hover { background: #2a2a38; }
-#bot-customer-design .iti__dial-code { color: var(--text-soft); }
-
-/* ── Select2 dark ──────────────────────────────────────────── */
-#bot-customer-design .select2-container { width: 100% !important; }
-
-#bot-customer-design .select2-container--default .select2-selection--single {
-  background: var(--input-bg);
-  border: 1px solid var(--input-bd);
-  border-radius: 8px;
-  height: 44px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#bot-customer-design .select2-container--default.select2-container--open .select2-selection--single,
-#bot-customer-design .select2-container--default.select2-container--focus .select2-selection--single {
-  border-color: var(--orange);
-  box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
-  outline: none;
-}
-
-#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__rendered {
-  color: var(--text);
-  line-height: 42px;
-  padding-left: 14px;
-  font-size: 0.88rem;
-  font-family: 'Inter', sans-serif;
-}
-
-#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__placeholder {
-  color: #3a3a50;
-}
-
-#bot-customer-design .select2-container--default .select2-selection--single .select2-selection__arrow b {
-  border-top-color: var(--text-soft);
-}
-
-#bot-customer-design .select2-dropdown {
-  background: #1a1a26;
-  border: 1px solid var(--input-bd);
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.88rem;
-  color: var(--text);
-}
-
-#bot-customer-design .select2-results__option { color: var(--text); padding: 9px 14px; }
-#bot-customer-design .select2-results__option:hover { background: #2a2a38; }
-#bot-customer-design .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background: var(--orange);
-  color: #fff;
-}
-
-/* ── Captcha ───────────────────────────────────────────────── */
-#bot-customer-design .captcha-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-bd);
-  border-radius: 8px;
-  padding: 8px 14px 8px 8px;
-}
-
-#bot-customer-design .captcha-wrap iframe {
-  flex-shrink: 0;
-  border-radius: 6px;
-  border: none;
-  background: #ffffff;
-  display: block;
-}
-
-#bot-customer-design .captcha-wrap input {
-  flex: 1;
-  background: transparent !important;
-  border: none !important;
-  border-bottom: 1px solid var(--input-bd) !important;
-  border-radius: 0 !important;
-  padding: 4px 0 !important;
-  color: var(--text) !important;
-  font-size: 0.88rem !important;
-  box-shadow: none !important;
-}
-
-#bot-customer-design .captcha-wrap input::placeholder { color: #3a3a50 !important; }
-#bot-customer-design .captcha-wrap input:focus {
-  border-bottom-color: var(--orange) !important;
-  box-shadow: none !important;
-}
-
-/* ── Checkboxes ────────────────────────────────────────────── */
-#bot-customer-design .checkboxes {
-  margin: 16px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#bot-customer-design .check-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  cursor: pointer;
-}
-
-#bot-customer-design .check-label input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 16px; height: 16px;
-  min-width: 16px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-bd);
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 2px;
-  transition: all 0.15s;
-  position: relative;
-}
-
-#bot-customer-design .check-label input[type="checkbox"]:checked {
-  background: var(--orange);
-  border-color: var(--orange);
-}
-
-#bot-customer-design .check-label input[type="checkbox"]:checked::after {
-  content: '';
-  position: absolute;
-  top: 2px; left: 4px;
-  width: 4px; height: 8px;
-  border: 2px solid #fff;
-  border-top: none;
-  border-left: none;
-  transform: rotate(45deg);
-}
-
-#bot-customer-design .check-label span {
-  font-size: 0.77rem;
-  color: var(--text-soft);
-  line-height: 1.5;
-}
-
-#bot-customer-design .check-label span b { color: #cdd5e0; font-weight: 600; }
-
-/* ── Botón ─────────────────────────────────────────────────── */
-#bot-customer-design .btn-submit {
-  width: 100%;
-  padding: 16px 20px;
-  background: var(--orange);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 800;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-  margin-top: 4px;
-}
-
-#bot-customer-design .btn-submit:hover:not(:disabled) {
-  background: var(--orange-deep);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(168,85,247,0.35);
-}
-
-#bot-customer-design .btn-submit:active:not(:disabled) { transform: translateY(0); }
-#bot-customer-design .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-#bot-customer-design .btn-arrow { transition: transform 0.2s; font-size: 1.1rem; }
-#bot-customer-design .btn-submit:hover:not(:disabled) .btn-arrow { transform: translateX(4px); }
-
-#bot-customer-design .spinner {
-  display: none;
-  width: 16px; height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── Footer ────────────────────────────────────────────────── */
-#bot-customer-design .panel-footer {
-  margin-top: 16px;
-  font-size: 0.7rem;
-  color: #3a3a50;
-  text-align: center;
-}
-
-/* ── Hidden ────────────────────────────────────────────────── */
-#bot-customer-design #product-container { display: none; }
-
-/* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  #bot-customer-design .bot-panel {
+  /* ── Layout ────────────────────────────────────────────────── */
+  #bot-customer-design .bot-wrapper {
+    position: relative;
+    min-height: 100vh;
     width: 100%;
+  }
+
+  /* imagen de fondo — capa base absoluta, siempre visible */
+  #bot-customer-design .bot-bg {
+    position: absolute;
+    inset: 0;
+    background-color: #060608;
+    background-image: url('https://s3.amazonaws.com/files.nodriza.io/gezpomotor/bot/voyahhearo.png');
+    background-size: cover;
+    background-position: center center;
+    z-index: 0;
+  }
+
+  #bot-customer-design .bot-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.1) 40%, rgba(9, 9, 14, 0.8) 100%);
+  }
+
+  /* ── Panel derecho — flota sobre la imagen ─────────────────── */
+  #bot-customer-design .bot-panel {
+    position: relative;
+    z-index: 1;
+    width: 460px;
     max-width: 100%;
     min-height: 100vh;
-    padding: 32px 20px;
+    margin-left: auto;
+    background: var(--panel);
+    padding: 48px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
   }
-  #bot-customer-design .panel-title { font-size: 1.35rem; }
-  #bot-customer-design .row-2 { grid-template-columns: 1fr; }
-}
+
+  /* ── Título ────────────────────────────────────────────────── */
+  #bot-customer-design .panel-title {
+    color: var(--white);
+    font-size: 1.85rem;
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+
+  #bot-customer-design .panel-title-line {
+    width: 48px;
+    height: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+
+  /* ── Sección label (naranja, uppercase) ────────────────────── */
+  #bot-customer-design .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--label);
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #bot-customer-design .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--input-bd);
+  }
+
+  /* ── Grupos de campo ───────────────────────────────────────── */
+  #bot-customer-design .form-group {
+    margin-bottom: 10px;
+  }
+
+  #bot-customer-design .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* ── Inputs ────────────────────────────────────────────────── */
+  #bot-customer-design input[type="text"],
+  #bot-customer-design input[type="email"],
+  #bot-customer-design input[type="tel"] {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-bd);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+
+
+  #bot-customer-design input[type="text"]:focus,
+  #bot-customer-design input[type="email"]:focus,
+  #bot-customer-design input[type="tel"]:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+  }
+
+  #bot-customer-design input::placeholder {
+    color: #5a5a72;
+  }
+
+  /* ── intl-tel-input dark ───────────────────────────────────── */
+  #bot-customer-design .iti {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  #bot-customer-design .iti input[type="tel"] {
+    padding: 12px 54px !important;
+  }
+
+  #bot-customer-design .iti__selected-flag {
+    background: var(--input-bg) !important;
+    border-right: 1px solid var(--input-bd);
+    border-radius: 8px 0 0 8px;
+  }
+
+  #bot-customer-design .iti__country-list {
+    background: #1a1a26;
+    border: 1px solid var(--input-bd);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    color: var(--text);
+    z-index: 9999;
+  }
+
+  #bot-customer-design .iti__country {
+    padding: 8px 12px;
+    color: var(--text);
+  }
+
+  #bot-customer-design .iti__country.iti__highlight,
+  #bot-customer-design .iti__country:hover {
+    background: #2a2a38;
+  }
+
+  #bot-customer-design .iti__dial-code {
+    color: var(--text-soft);
+  }
+
+  /* ── Select2 dark ──────────────────────────────────────────── */
+  #bot-customer-design .select2-container {
+    width: 100% !important;
+  }
+
+  #bot-customer-design .select2-container--default .select2-selection--single {
+    background: var(--input-bg);
+    border: 1px solid var(--input-bd);
+    border-radius: 8px;
+    height: 44px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #bot-customer-design .select2-container--default.select2-container--open .select2-selection--single,
+  #bot-customer-design .select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    outline: none;
+  }
+
+  #bot-customer-design .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text);
+    line-height: 42px;
+    padding-left: 14px;
+    font-size: 0.88rem;
+    font-family: 'Inter', sans-serif;
+  }
+
+  #bot-customer-design .select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #3a3a50;
+  }
+
+  #bot-customer-design .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-top-color: var(--text-soft);
+  }
+
+  #bot-customer-design .select2-dropdown {
+    background: #1a1a26;
+    border: 1px solid var(--input-bd);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  #bot-customer-design .select2-results__option {
+    color: var(--text);
+    padding: 9px 14px;
+  }
+
+  #bot-customer-design .select2-results__option:hover {
+    background: #2a2a38;
+  }
+
+  #bot-customer-design .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background: var(--orange);
+    color: #fff;
+  }
+
+  /* ── Captcha ───────────────────────────────────────────────── */
+  #bot-customer-design .captcha-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-bd);
+    border-radius: 8px;
+    padding: 8px 14px 8px 8px;
+  }
+
+  #bot-customer-design .captcha-wrap iframe {
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: none;
+    background: #ffffff;
+    display: block;
+  }
+
+  #bot-customer-design .captcha-wrap input {
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--input-bd) !important;
+    border-radius: 0 !important;
+    padding: 4px 0 !important;
+    color: var(--text) !important;
+    font-size: 0.88rem !important;
+    box-shadow: none !important;
+  }
+
+  #bot-customer-design .captcha-wrap input::placeholder {
+    color: #3a3a50 !important;
+  }
+
+  #bot-customer-design .captcha-wrap input:focus {
+    border-bottom-color: var(--orange) !important;
+    box-shadow: none !important;
+  }
+
+  /* ── Checkboxes ────────────────────────────────────────────── */
+  #bot-customer-design .checkboxes {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #bot-customer-design .check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+  }
+
+  #bot-customer-design .check-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-bd);
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  #bot-customer-design .check-label input[type="checkbox"]:checked {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+
+  #bot-customer-design .check-label input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    width: 4px;
+    height: 8px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+  }
+
+  #bot-customer-design .check-label span {
+    font-size: 0.77rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+
+  #bot-customer-design .check-label span b {
+    color: #cdd5e0;
+    font-weight: 600;
+  }
+
+  /* ── Botón ─────────────────────────────────────────────────── */
+  #bot-customer-design .btn-submit {
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-top: 4px;
+  }
+
+  #bot-customer-design .btn-submit:hover:not(:disabled) {
+    background: var(--orange-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(168, 85, 247, 0.35);
+  }
+
+  #bot-customer-design .btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  #bot-customer-design .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #bot-customer-design .btn-arrow {
+    transition: transform 0.2s;
+    font-size: 1.1rem;
+  }
+
+  #bot-customer-design .btn-submit:hover:not(:disabled) .btn-arrow {
+    transform: translateX(4px);
+  }
+
+  #bot-customer-design .spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  #bot-customer-design .panel-footer {
+    margin-top: 16px;
+    font-size: 0.7rem;
+    color: #3a3a50;
+    text-align: center;
+  }
+
+  /* ── Hidden ────────────────────────────────────────────────── */
+  #bot-customer-design #product-container {
+    display: none;
+  }
+
+  /* ── Responsive ────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    #bot-customer-design .bot-panel {
+      width: 100%;
+      max-width: 100%;
+      min-height: 100vh;
+      padding: 32px 20px;
+    }
+
+    #bot-customer-design .panel-title {
+      font-size: 1.35rem;
+    }
+
+    #bot-customer-design .row-2 {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 
 <!-- HTML -->
@@ -439,7 +500,8 @@
 
       <!-- Captcha imagen -->
       <div class="form-group">
-        <iframe id="captcha-frame" width="200" height="70" scrolling="no" style="border:none;border-radius:8px;background:#000;display:block;"></iframe>
+        <iframe id="captcha-frame" width="200" height="70" scrolling="no"
+          style="border:none;border-radius:8px;background:#000;display:block;"></iframe>
       </div>
 
       <!-- Captcha input -->
@@ -463,159 +525,163 @@
 
 <!-- SCRIPTS — orden exacto -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-<script src="https://s3.amazonaws.com/cdn.nodriza.io/sdk/nodriza@lastest/nodriza-sdk.bundle.js"></script>
+<script src="https://s3.amazonaws.com/cdn.nodriza.io/sdk/nodriza@latest/nodriza-sdk.bundle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
 
 <script>
-// ── Configuración ────────────────────────────────────────────
-var domain              = 'customer-design.prolibu.com';
-var botName             = 'botprueba';
-const bearerToken       = 'a6a0278f-b899-44ec-9870-417381a5b6dc';
-const currency          = 'COP';
-const filtroProductos   = '';
-const filtroProductos2  = '';
-const rolesString       = 'agent';
-const useWebhookHubspot = false;
-const customAttributes  = [];
+  // ── Configuración ────────────────────────────────────────────
+  var domain = 'customer-design.prolibu.com';
+  var botName = 'botprueba';
+  const bearerToken = 'a6a0278f-b899-44ec-9870-417381a5b6dc';
+  const currency = 'COP';
+  const filtroProductos = '';
+  const filtroProductos2 = '';
+  const rolesString = 'agent';
+  const useWebhookHubspot = false;
+  const customAttributes = [];
 
-// ── Estado interno ───────────────────────────────────────────
-var productsList    = [];
-var agentsList      = [];
-var fullPhoneNumber = '';
-var iti;
+  // ── Estado interno ───────────────────────────────────────────
+  var productsList = [];
+  var agentsList = [];
+  var fullPhoneNumber = '';
+  var iti;
 
-// ── Funciones base ───────────────────────────────────────────
-function fetchData(url, method, params, headers, successCallback, errorCallback) {
-  $.ajax({
-    url: url, type: method, data: params, headers: headers,
-    success: function (res) { successCallback(res); },
-    error:   function (err) { errorCallback(err); }
-  });
-}
-
-function loadAgents() {
-  var url = 'https://' + domain + '/v1/publicservices/getAgents?roles=' + encodeURIComponent(rolesString);
-  fetchData(url, 'GET', {}, {}, function (res) {
-    agentsList = res || [];
-    console.log('agentsList:', agentsList.length, 'items');
-  }, function (err) { console.error('Error loadAgents:', err); });
-}
-
-function loadProducts() {
-  var url     = 'https://' + domain + '/v1/product?disabled=false';
-  var headers = { Authorization: 'Bearer ' + bearerToken };
-  fetchData(url, 'GET', {}, headers, function (res) {
-    var items = res.data || res || [];
-    productsList = items.map(function (p) {
-      return { sku: p.sku, name: p.name, disabled: p.disabled };
+  // ── Funciones base ───────────────────────────────────────────
+  function fetchData(url, method, params, headers, successCallback, errorCallback) {
+    $.ajax({
+      url: url, type: method, data: params, headers: headers,
+      success: function (res) { successCallback(res); },
+      error: function (err) { errorCallback(err); }
     });
-    console.log('productsList:', productsList.length, 'items');
-    $('#model').html(getModelOptions()).trigger('change');
-    $('#product-container').show();
-  }, function (err) { console.error('Error loadProducts:', err); });
-}
-
-function getModelOptions() {
-  var prods = _.sortBy(productsList.filter(function (p) { return !p.disabled; }), 'name');
-  var opts  = '<option value="">Seleccione el Modelo</option>';
-  prods.forEach(function (p) {
-    opts += '<option value="' + p.sku + '">' + p.name + '</option>';
-  });
-  return opts;
-}
-
-function getProductsBy(key, values) {
-  return productsList.filter(function (p) { return values.indexOf(p[key]) !== -1; });
-}
-
-function updateFullPhoneNumber() {
-  if (iti) fullPhoneNumber = iti.getNumber();
-}
-
-function setLoading(loading) {
-  if (loading) {
-    $('#btn-submit').prop('disabled', true);
-    $('#btn-text').text('Enviando...');
-    $('#btn-arrow').hide();
-    $('#btn-spinner').css('display', 'inline-block');
-  } else {
-    $('#btn-submit').prop('disabled', false);
-    $('#btn-text').text('Cotizar ahora');
-    $('#btn-arrow').show();
-    $('#btn-spinner').hide();
   }
-}
 
-function submitForm(e) {
-  e.preventDefault();
-  if (!$('#authorization').is(':checked')) {
-    alert('Debes aceptar la autorización de datos para continuar.');
-    return;
+  function loadAgents() {
+    var url = 'https://' + domain + '/v1/publicservices/getAgents';
+    var params = { status: 'active', roles: [rolesString] };
+    fetchData(url, 'GET', params, {}, function (res) {
+      var agents = Array.isArray(res) ? res : (res.results || []);
+      agentsList = agents.map(function (a) {
+        return { email: a.email, firstName: a.firstName || '', lastName: a.lastName || '' };
+      });
+      console.log('agentsList:', agentsList.length, 'items');
+    }, function (err) { console.error('Error loadAgents:', err); });
   }
-  setLoading(true);
-  nodriza.config({ domain: domain });
-  nodriza.api.confirmationCode.confirm({ code: $('#confirmationCode').val() }, function (err, res) {
-    if (err || !res || !res.hash) {
-      alert('Código de verificación incorrecto. Intenta de nuevo.');
-      setLoading(false);
+
+  function loadProducts() {
+    var url = 'https://' + domain + '/v1/product?disabled=false';
+    var headers = { Authorization: 'Bearer ' + bearerToken };
+    fetchData(url, 'GET', {}, headers, function (res) {
+      var items = res.data || res || [];
+      productsList = items.map(function (p) {
+        return { sku: p.sku, name: p.name, disabled: p.disabled };
+      });
+      console.log('productsList:', productsList.length, 'items');
+      $('#model').html(getModelOptions()).trigger('change');
+      $('#product-container').show();
+    }, function (err) { console.error('Error loadProducts:', err); });
+  }
+
+  function getModelOptions() {
+    var prods = _.sortBy(productsList.filter(function (p) { return !p.disabled; }), 'name');
+    var opts = '<option value="">Seleccione el Modelo</option>';
+    prods.forEach(function (p) {
+      opts += '<option value="' + p.sku + '">' + p.name + '</option>';
+    });
+    return opts;
+  }
+
+  function getProductsBy(key, values) {
+    return productsList.filter(function (p) { return values.indexOf(p[key]) !== -1; });
+  }
+
+  function updateFullPhoneNumber() {
+    if (iti) fullPhoneNumber = iti.getNumber();
+  }
+
+  function setLoading(loading) {
+    if (loading) {
+      $('#btn-submit').prop('disabled', true);
+      $('#btn-text').text('Enviando...');
+      $('#btn-arrow').hide();
+      $('#btn-spinner').css('display', 'inline-block');
+    } else {
+      $('#btn-submit').prop('disabled', false);
+      $('#btn-text').text('Cotizar ahora');
+      $('#btn-arrow').show();
+      $('#btn-spinner').hide();
+    }
+  }
+
+  function submitForm(e) {
+    e.preventDefault();
+    if (!$('#authorization').is(':checked')) {
+      alert('Debes aceptar la autorización de datos para continuar.');
       return;
     }
-    createProposal(res.hash);
+    setLoading(true);
+    nodriza.config({ domain: domain });
+    nodriza.api.confirmationCode.confirm({ code: $('#confirmationCode').val() }, function (err, res) {
+      if (err || !res || !res.hash) {
+        alert('Código de verificación incorrecto. Intenta de nuevo.');
+        setLoading(false);
+        return;
+      }
+      createProposal(res.hash);
+    });
+  }
+
+  function createProposal(hash) {
+    updateFullPhoneNumber();
+    var agentEmail = agentsList.length > 0 ? agentsList[0].email : '';
+    var selectedSku = $('#model').val();
+    var selectedProd = getProductsBy('sku', [selectedSku]);
+    var firstName = $('#firstName').val().trim();
+    var lastName = $('#lastName').val().trim();
+
+    var payload = {
+      chatbot: botName,
+      to: { firstName: firstName, lastName: lastName, mobile: fullPhoneNumber, email: $('#email').val().trim(), agent: agentEmail },
+      doc: {
+        title: 'Cotización ' + firstName + ' ' + lastName + ' - ' + (selectedProd[0] ? selectedProd[0].name : ''),
+        products: [{ id: selectedSku, quantity: 1 }],
+        status: 'Ready',
+        currency: currency,
+        metadata: { webhook: useWebhookHubspot, customAttributes: customAttributes },
+        dic: { hash: hash }
+      },
+      emailClient: true, emailAgent: true, assignedAgentEmail: agentEmail
+    };
+
+    nodriza.config({ domain: domain });
+    nodriza.api.proposalbot.generate(payload, function (err, res) {
+      if (err) {
+        console.error('Error createProposal:', err);
+        alert('Ocurrió un error al generar la cotización. Intenta de nuevo.');
+        setLoading(false);
+        return;
+      }
+      if (res && res.url) window.location.href = res.url;
+    });
+  }
+
+  // ── Init ─────────────────────────────────────────────────────
+  $(document).ready(function () {
+
+    iti = window.intlTelInput(document.querySelector('#phone'), {
+      initialCountry: 'co',
+      preferredCountries: ['co', 'mx', 'us'],
+      utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
+    });
+
+    $('#model').select2({ width: '100%' });
+
+    $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
+
+    loadAgents();
+    loadProducts();
+
+    $('#phone').on('input change', function () { updateFullPhoneNumber(); });
   });
-}
-
-function createProposal(hash) {
-  updateFullPhoneNumber();
-  var agentEmail   = agentsList.length > 0 ? agentsList[0].email : '';
-  var selectedSku  = $('#model').val();
-  var selectedProd = getProductsBy('sku', [selectedSku]);
-  var firstName    = $('#firstName').val().trim();
-  var lastName     = $('#lastName').val().trim();
-
-  var payload = {
-    chatbot: botName,
-    to: { firstName: firstName, lastName: lastName, mobile: fullPhoneNumber, email: $('#email').val().trim(), agent: agentEmail },
-    doc: {
-      title:    'Cotización ' + firstName + ' ' + lastName + ' - ' + (selectedProd[0] ? selectedProd[0].name : ''),
-      products: [{ id: selectedSku, quantity: 1 }],
-      status:   'Ready',
-      currency: currency,
-      metadata: { webhook: useWebhookHubspot, customAttributes: customAttributes },
-      dic:      { hash: hash }
-    },
-    emailClient: true, emailAgent: true, assignedAgentEmail: agentEmail
-  };
-
-  nodriza.config({ domain: domain });
-  nodriza.api.proposalbot.generate(payload, function (err, res) {
-    if (err) {
-      console.error('Error createProposal:', err);
-      alert('Ocurrió un error al generar la cotización. Intenta de nuevo.');
-      setLoading(false);
-      return;
-    }
-    if (res && res.url) window.location.href = res.url;
-  });
-}
-
-// ── Init ─────────────────────────────────────────────────────
-$(document).ready(function () {
-
-  iti = window.intlTelInput(document.querySelector('#phone'), {
-    initialCountry:     'co',
-    preferredCountries: ['co', 'mx', 'us'],
-    utilsScript:        'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js'
-  });
-
-  $('#model').select2({ width: '100%' });
-
-  $('#captcha-frame').attr('src', 'https://' + domain + '/v1/ConfirmationCode/?color=white&noise=2&size=4');
-
-  loadAgents();
-  loadProducts();
-
-  $('#phone').on('input change', function () { updateFullPhoneNumber(); });
-});
 </script>
