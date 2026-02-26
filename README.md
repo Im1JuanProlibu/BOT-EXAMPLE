@@ -71,6 +71,23 @@ Se configura **una sola vez** y nunca más se toca.
 
 ---
 
+## Crear un bot nuevo — script interactivo
+
+En lugar de copiar y editar archivos manualmente, usar el script `create-bot.js`. Pregunta todo lo necesario y genera el HTML y el loader automáticamente.
+
+```bash
+node create-bot.js
+```
+
+El script pregunta:
+- Tipo de bot (Creador o Editor)
+- Datos del cliente (dominio, token, roles…)
+- Opciones específicas del tipo (filtros, HubSpot, colores…)
+
+Al terminar imprime los archivos generados, las 2 líneas para pegar en Prolibu y los comandos de git listos para copiar.
+
+---
+
 ## Cómo actualizar un bot
 
 ```bash
